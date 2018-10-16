@@ -137,9 +137,6 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 upgr = UpgradeResponseRecord().to_bytes()
                 request_stream.write(upgr)
 
-                import pdb
-                pdb.set_trace()
-                print('hello')
                 self.stream = GENSECStream(request_stream)
                 self.stream.negotiate_server()
                 self.negotiated = True
