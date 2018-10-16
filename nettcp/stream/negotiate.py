@@ -78,3 +78,12 @@ class NegotiateStream:
         else:
             payload_size = struct.unpack('<I', self._inner.read(4))[0]
             return self._inner.read(payload_size)
+
+    def write_handshake_done(self, data):
+        self._handshake_done = True
+        handshake = HandshakeDone(
+                                major=1,
+                                minor=0,
+                                payload_size=len(data)
+                            ).to_bytes()
+        self._inner.write(handshake + data)

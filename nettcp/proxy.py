@@ -17,9 +17,9 @@ except ImportError:
 
 from .stream.socket import SocketStream
 from .nmf import (Record, EndRecord, KnownEncodingRecord,
-                  UpgradeRequestRecord, UpgradeResponseRecord, register_types)
+                  UpgradeRequestRecord, UpgradeResponseRecord, PreambleEndRecord, PreambleAckRecord, register_types)
 try:
-    from .stream.gssapi import GSSAPIStream
+    from .stream.gssapi import GSSAPIStream, GENSECStream
 except ImportError:
     warnings.warn('gssapi not installed, no negotiate protocol available')
     GSSAPIStream = None
@@ -121,17 +121,33 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
             self.stream.write(data)
 
             if obj.code == KnownEncodingRecord.code:
-                if self.negotiate:
-                    upgr = UpgradeRequestRecord(UpgradeProtocolLength=21,
-                                                UpgradeProtocol='application/negotiate').to_bytes()
-                    s.sendall(upgr)
-                    resp = Record.parse_stream(SocketStream(s))
-                    assert resp.code == UpgradeResponseRecord.code, resp
-                    self.stream = GSSAPIStream(self.stream, self.server_name)
-                    self.stream.negotiate()
-                    self.negotiated = True
+                # if self.negotiate:
+                #     upgr = UpgradeRequestRecord(UpgradeProtocolLength=21,
+                #                                 UpgradeProtocol='application/negotiate').to_bytes()
+                #    s.sendall(upgr)
+                #     resp = Record.parse_stream(SocketStream(s))
+                #     assert resp.code == UpgradeResponseRecord.code, resp
+                    # self.stream = GSSAPIStream(self.stream, self.server_name)
                 # start receive thread
-                t.start()
+                # t.start()
+                pass
+            elif obj.code == UpgradeRequestRecord.code:
+                upgr = UpgradeResponseRecord().to_bytes()
+                request_stream.write(upgr)
+
+                import pdb
+                pdb.set_trace()
+                print('hello')
+                self.stream = GENSECStream(request_stream)
+                self.stream.negotiate_server()
+                self.negotiated = True
+
+                preamble_end = Record.parse_stream(self.stream)
+                assert preamble_end.code == PreambleEndRecord.code, preamble_end
+
+                preamble_ack = PreambleAckRecord().to_bytes()
+                self.stream.write(preamble_ack)
+
             elif obj.code == EndRecord.code:
                 t.terminate()
                 if self.stop.is_set():
