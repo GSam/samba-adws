@@ -107,8 +107,10 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
     def mainloop(self, s, t):
         request_stream = SocketStream(self.request)
+        self.stream = request_stream
+
         while not self.stop.is_set():
-            obj = Record.parse_stream(request_stream)
+            obj = Record.parse_stream(self.stream)
 
             log.debug('Client record: %s', obj)
 
@@ -118,7 +120,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
             print_data('Got Data from client:', data)
 
-            self.stream.write(data)
+            # self.stream.write(data)
 
             if obj.code == KnownEncodingRecord.code:
                 # if self.negotiate:
