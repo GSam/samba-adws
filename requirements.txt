@@ -1,0 +1,5 @@
+helperlib
+# need libkrb5-dev
+gssapi
+future
+jinja2
