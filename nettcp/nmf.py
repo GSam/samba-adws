@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 # Copyright 2016 Timo Schmid
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 
 import struct
 import enum
@@ -354,6 +354,17 @@ class SizedEnvelopedMessageRecord(Record):
         ('Payload', pt(raw_bytes, 'Size'))
     )
 
+    def payload_to_xml(self):
+        from .protocol2xml import build_dictionary
+        from wcf.records import Record, print_records
+
+        from io import BytesIO, StringIO
+        fp = BytesIO(self.Payload)
+        build_dictionary(fp, ('client', 'c>s'))
+        records = Record.parse(fp)
+        out = StringIO()
+        print_records(records, fp=out)
+        return out.getvalue()
 
 class EndRecord(Record):
     code = 0x07
