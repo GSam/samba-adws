@@ -1,0 +1,27 @@
+<s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</a:Action>
+        <a:RelatesTo>{{MessageID}}</a:RelatesTo>
+        <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+    </s:Header>
+    <s:Body>
+        <da:BaseObjectSearchResponse xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">
+
+{% for attr in attrs %}
+<da:PartialAttribute>
+{%- if attr.attr != 'extendedAttributeInfo' %}
+{{attr.to_xml()|safe}}
+{%- else %}
+{% include 'extendedAttr.xml' %}
+{%- endif %}
+</da:PartialAttribute>
+{% endfor %}
+
+            <ad:controls>
+              <ad:control type="1.2.840.113556.1.4.319" criticality="false">
+                <ad:controlValue xsi:type="xsd:base64Binary">MIQAAAAFAgEABAA=</ad:controlValue>
+              </ad:control>
+            </ad:controls>
+          </da:BaseObjectSearchResponse>
+    </s:Body>
+</s:Envelope>
