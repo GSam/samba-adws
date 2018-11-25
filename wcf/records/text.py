@@ -276,7 +276,7 @@ class UnicodeChars8TextRecord(Text):
         >>> UnicodeChars8TextRecord(u'abc').to_bytes()
         b'\\xb6\\x06a\\x00b\\x00c\\x00'
         """
-        data = self.value.encode('utf-16')[2:]  # skip bom
+        data = self.value.encode('utf-16le') #[2:]  # skip bom
         bt = struct.pack(b'<B', self.type)
         bt += struct.pack(b'<B', len(data))
         bt += data
