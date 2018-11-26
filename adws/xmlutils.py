@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf8
+import re
 
 from lxml import etree
 
@@ -43,6 +44,15 @@ def print_xml(xml, sn=0, mode='w+'):
     # print('######################XML TAIL##########################')
     with open('/vagrant/%s.xml' % sn, mode) as f:
         f.write(xml + '\n\n\n')
+
+
+def rm_whitespaces(text):
+    """rm any whitespaces from text"""
+    return re.sub(r'\s+', '', text, flags=re.UNICODE)
+
+
+def compare_xml(xml1, xml2):
+    return rm_whitespaces(xml1) == rm_whitespaces(xml2)
 
 
 class XMLHelper(object):
