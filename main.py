@@ -186,7 +186,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
 def main():
     import argparse
-    global trace_file, TARGET_HOST, TARGET_PORT
+    global trace_file
 
     HOST, PORT = "localhost", 8090
 
@@ -195,13 +195,7 @@ def main():
     parser.add_argument('-b', '--bind', default=HOST)
     parser.add_argument('-p', '--port', type=int, default=PORT)
     parser.add_argument('-n', '--negotiate', help='Negotiate with the given server name')
-    parser.add_argument('TARGET_HOST')
-    parser.add_argument('TARGET_PORT', type=int)
-
     args = parser.parse_args()
-
-    TARGET_HOST = args.TARGET_HOST
-    TARGET_PORT = args.TARGET_PORT
 
     trace_file = args.trace_file
 
