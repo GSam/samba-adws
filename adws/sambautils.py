@@ -111,6 +111,7 @@ class LdapAttr(object):
     def __init__(self, attr, vals, ldap_syntax, xsi_type='xsd:string'):
         self.attr = attr  # sAMAccountName
         self.ldap_syntax = ldap_syntax
+        assert ':' in xsi_type
         self.xsi_type = xsi_type
 
         if self.xsi_type == 'xsd:base64Binary':
