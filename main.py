@@ -14,6 +14,7 @@ import warnings
 from nettcp.nmf import Record as NMFRecord, register_types
 
 from adws import sambautils
+from adws import xmlutils
 
 try:
     import SocketServer
@@ -46,65 +47,6 @@ log = logging.getLogger(__name__ + '.NETTCPProxy')
 trace_file = None
 
 
-from lxml import etree
-
-NAMESPACES = {
-    "s": "http://www.w3.org/2003/05/soap-envelope",
-    "a": "http://www.w3.org/2005/08/addressing",
-    "addata": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Data",
-    "ad": "http://schemas.microsoft.com/2008/1/ActiveDirectory",
-    "da": "http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess",
-    "xsd": "http://www.w3.org/2001/XMLSchema",
-    "xsi": "http://www.w3.org/2001/XMLSchema-instance",
-}
-
-
-def elem_get_text(elem):
-    if elem is not None:
-        text = elem.text
-        if text is not None:
-            return text.strip()
-    return ''
-
-
-def elem_is_empty(elem):
-    # no text, no children, then empty
-    return len(elem) == 0 and elem_get_text(elem) == ''
-
-
-class XMLHelper(object):
-    """
-    A class helps to extract data from xml.
-    """
-
-    def __init__(self, xml):
-        self.xml = xml
-        self.root = etree.fromstring(xml)
-        self.nsmap = self.root.nsmap
-        # root ns + common ns
-        self.nsmap.update(NAMESPACES)
-
-    def get_elem(self, xpath, as_text=False):
-        elem = self.root.find(xpath, self.nsmap)
-        return elem_get_text(elem) if as_text else elem
-
-    def get_elem_text(self, xpath):
-        return self.get_elem(xpath, as_text=True)
-
-    def get_elem_list(self, xpath, as_text=False):
-        print(self.nsmap)
-        elems = self.root.findall(xpath, self.nsmap)
-        return [elem.text.strip() for elem in elems] if as_text else elems
-
-    def is_elem_empty(self, xpath):
-        """
-        A empty element has no text and children
-
-        e.g.: <s:Body></s:Body>
-        """
-        elem = self.root.find(xpath, self.nsmap)
-        return elem_is_empty(elem)
-
 def print_data(msg, data):
     if log.isEnabledFor(logging.DEBUG):
         print(msg, file=sys.stderr)
@@ -112,16 +54,6 @@ def print_data(msg, data):
             print_hexdump(data, colored=True, file=sys.stderr)
         else:
             print(data, file=sys.stderr)
-
-def print_xml(xml, sn=0, mode='w+'):
-    # parse to validate
-    root = etree.fromstring(xml)
-    # print('######################XML HEAD##########################')
-    # xml2 = etree.tostring(root, pretty_print=True)
-    # print(xml2)
-    # print('######################XML TAIL##########################')
-    with open('/vagrant/%s.xml' % sn, mode) as f:
-        f.write(xml + '\n\n\n')
 
 request_index = 0
 
@@ -184,9 +116,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
                 global request_index
 
-                print_xml(xml, request_index, mode='w+')
+                xmlutils.print_xml(xml, request_index, mode='w+')
 
-                xmlhelper = XMLHelper(xml)
+                xmlhelper = xmlutils.XMLHelper(xml)
 
                 # could be LDAP attrs or
                 # synthetic attrs with namespace prefix
@@ -217,7 +149,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
                 assert ack_xml, 'I do not know how to answer'
 
-                print_xml(ack_xml, request_index, mode='a')
+                xmlutils.print_xml(ack_xml, request_index, mode='a')
                 request_index += 1
 
                 filename = '/vagrant/ack.xml'
