@@ -75,7 +75,6 @@ class XMLHelper(object):
         return self.get_elem(xpath, as_text=True)
 
     def get_elem_list(self, xpath, as_text=False):
-        print(self.nsmap)
         elems = self.root.findall(xpath, self.nsmap)
         return [elem.text.strip() for elem in elems] if as_text else elems
 
