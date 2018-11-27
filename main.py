@@ -101,9 +101,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 pass
             elif obj.code == UpgradeRequestRecord.code:
                 upgr = UpgradeResponseRecord().to_bytes()
-                request_stream.write(upgr)
+                self.stream.write(upgr)
 
-                self.stream = GENSECStream(request_stream)
+                self.stream = GENSECStream(self.stream)
                 self.stream.negotiate_server()
                 self.negotiated = True
 
