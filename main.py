@@ -72,13 +72,15 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
         trace_file.flush()
 
     def handle(self):
-        request_stream = SocketStream(self.request)
-        self.stream = request_stream
 
-        while True:
+        EnumerationContext_Dict = {}
+
+        self.stream = SocketStream(self.request)
+
+        while self.stream:
+            print('while loop start...')
             obj = Record.parse_stream(self.stream)
-
-            # log.debug('Client record: %s', obj)
+            print('Client record: %s' % obj)
 
             # data = obj.to_bytes()
 
