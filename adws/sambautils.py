@@ -243,6 +243,47 @@ def render_transfer_get(**context):
 
     return render_template('transfer-Get.xml', **context)
 
+def render_enumerate(**context):
+    return render_template('Enumerate.xml', **context)
+
+def render_pull(**context):
+    SelectionProperty_List = context['SelectionProperty_List']
+    enumeration_context = context['EnumerationContext']
+    cookie = enumeration_context.get('cookie', '')
+
+    attr_names = [attr.split(':')[-1] for attr in SelectionProperty_List]
+    LdapQuery = context['LdapQuery']
+    MaxElements = context['MaxElements']
+
+    scope = SCOPE_ADLQ_TO_LDB[LdapQuery['Scope'].lower()]
+    result = samdb.search(
+        base=LdapQuery['BaseObject'],
+        scope=scope,
+        expression=LdapQuery['Filter'],
+        attrs=attr_names,
+        controls=['paged_results:1:%s%s' % (MaxElements, cookie)]
+    )
+
+    ctrls = [str(c) for c in result.controls if
+             str(c).startswith("paged_results")]
+    spl = ctrls[0].rsplit(':', 3)
+    if len(spl) == 3:
+        new_cookie = ':' + spl[-1]
+        enumeration_context['cookie'] = new_cookie
+        context['is_end'] = False
+    else:
+        # Set finish sequence
+        context['is_end'] = True
+
+    objects = [
+        build_attr_list(msg, get_attr_schema_syntax, attr_names=attr_names)
+        for msg in result.msgs
+    ]
+    context['objects'] = objects
+    # import ipdb; ipdb.set_trace()
+
+    return render_template('Pull.xml', **context)
+
 
 if __name__ == '__main__':
     from IPython import embed
