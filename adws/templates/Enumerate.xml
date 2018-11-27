@@ -1,0 +1,17 @@
+<s:Envelope
+    xmlns:a="http://www.w3.org/2005/08/addressing" 
+    xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse</a:Action>
+        <a:RelatesTo>{{MessageID}}</a:RelatesTo>
+    </s:Header>
+    <s:Body>
+        <wsen:EnumerateResponse
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+            xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+            <wsen:Expires>2018-10-18T01:10:14.5239878Z</wsen:Expires>
+            <wsen:EnumerationContext>{{EnumerationContext}}</wsen:EnumerationContext>
+        </wsen:EnumerateResponse>
+    </s:Body>
+</s:Envelope>
