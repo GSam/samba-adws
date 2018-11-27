@@ -201,10 +201,11 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 payload = dump_records(records)
                 with open('/vagrant/payload.dat', 'wb+') as f:
                     f.write(payload)
-
+                size = len(payload) + 1
+                print('output payload size: %d' % size)
                 ack = SizedEnvelopedMessageRecord(
                     Payload=b'\x00' + payload,
-                    Size=len(payload) + 1
+                    Size=size
                 )
                 _, ack2 = Record.parse(ack.to_bytes())
                 assert ack2.Size == ack.Size
