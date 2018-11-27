@@ -27,6 +27,13 @@ lp = LoadParm()
 lp.load_default()
 samdb = SamDB(lp=lp, session_info=system_session())
 
+# https://msdn.microsoft.com/en-us/library/dd340513.aspx
+SCOPE_ADLQ_TO_LDB = {
+    'base': ldb.SCOPE_BASE,
+    'onelevel': ldb.SCOPE_ONELEVEL,
+    'subtree': ldb.SCOPE_SUBTREE,
+}
+
 
 def render_template(template_name, **kwargs):
     template = ENV.get_template(template_name)
