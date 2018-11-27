@@ -184,23 +184,11 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 xmlutils.print_xml(ack_xml, request_index, mode='a')
                 request_index += 1
 
-                filename = '/vagrant/ack.xml'
-                with open(filename, 'w+') as f:
-                    f.write(ack_xml)
-
                 from wcf.xml2records import XMLParser
-                # import ipdb; ipdb.set_trace()
-                # records = XMLParser.parse(ack_xml.encode('utf-8'))
-                # print(records)
-                # from lib.converter import Converter
-                # converter = Converter(filename)
-                # converter.xml_to_mcnbfs(True)
-                # payload = converter.output
-
+                records = XMLParser.parse(ack_xml.encode('utf-8'))
                 from wcf.records import dump_records
                 payload = dump_records(records)
-                with open('/vagrant/payload.dat', 'wb+') as f:
-                    f.write(payload)
+
                 size = len(payload) + 1
                 print('output payload size: %d' % size)
                 ack = SizedEnvelopedMessageRecord(
