@@ -4,6 +4,8 @@
 from __future__ import print_function, unicode_literals, absolute_import
 from datetime import datetime
 from io import BytesIO, StringIO
+
+import uuid
 import socket
 import logging
 import sys
@@ -135,6 +137,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 }
 
                 ack_xml = None
+                need_endrecord = False
 
                 if context['Action'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Get':
                     if sambautils.is_rootDSE(context['objectReferenceProperty']):
@@ -146,6 +149,35 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                     else:
                         # search object
                         ack_xml = sambautils.render_transfer_get(**context)
+                        need_endrecord = True
+                elif context['Action'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate':
+                    enumeration_context = {}
+                    ldapquery_elem = xmlhelper.get_elem('.//adlq:LdapQuery')
+                    adlq_len = len(xmlutils.NAMESPACES['adlq']) + 2
+                    # tag: '{http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/LdapQuery}Filter'
+                    enumeration_context['LdapQuery'] = {
+                        child.tag[adlq_len:]: child.text.strip()
+                        for child in ldapquery_elem
+                    }
+                    enumeration_context['SelectionProperty_List'] = xmlhelper.get_elem_list(
+                        './/ad:SelectionProperty', as_text=True)
+
+                    EnumerationContext = str(uuid.uuid1())
+                    EnumerationContext_Dict[EnumerationContext] = enumeration_context
+
+                    context['EnumerationContext'] = EnumerationContext
+                    ack_xml = sambautils.render_enumerate(**context)
+
+                elif context['Action'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull':
+                    context['MaxElements'] = xmlhelper.get_elem_text('.//wsen:MaxElements')
+                    EnumerationContext = xmlhelper.get_elem_text('.//wsen:EnumerationContext')
+
+                    enumeration_context = EnumerationContext_Dict[EnumerationContext]
+                    context['EnumerationContext'] = enumeration_context
+
+                    context.update(enumeration_context)
+
+                    ack_xml = sambautils.render_pull(**context)
 
                 assert ack_xml, 'I do not know how to answer'
 
@@ -178,10 +210,17 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 assert ack2.Size == ack.Size
                 assert ack2.Payload == ack.Payload
                 self.stream.write(ack.to_bytes())
+                if need_endrecord:
+                    self.stream.write(EndRecord().to_bytes())
+                    break
+                # self.stream.close()
 
             elif obj.code == EndRecord.code:
-                # TODO
-                self.stream.close()
+                break
+                # self.stream.close()
+
+        print('exit handle')
+
 
 
 def main():
