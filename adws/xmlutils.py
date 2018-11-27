@@ -12,6 +12,8 @@ NAMESPACES = {
     "da": "http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess",
     "xsd": "http://www.w3.org/2001/XMLSchema",
     "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+    "adlq": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/LdapQuery",
+    "wsen": "http://schemas.xmlsoap.org/ws/2004/09/enumeration",
 }
 
 
