@@ -57,9 +57,9 @@ class NegotiateStream:
             self._inner.write(handshake + data)
         else:
             while data:
-                data2 = data[:0xFC00]
+                data2 = data[:0xFC30]
                 self._inner.write(struct.pack('<I', len(data2)) + data2)
-                data = data[0xFC00:]
+                data = data[0xFC30:]
 
     def read(self, count=None):
         if not self._handshake_done:
