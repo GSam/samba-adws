@@ -77,6 +77,8 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
         self.stream = SocketStream(self.request)
 
+        samdbhelper = sambautils.SamDBHelper()
+
         while self.stream:
             print('while loop start...')
             obj = Record.parse_stream(self.stream)
@@ -145,12 +147,12 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                     if sambautils.is_rootDSE(context['objectReferenceProperty']):
                         # search rootDSE
                         if not AttributeType_List:  # search all
-                            ack_xml = sambautils.render_root_dse_xml(**context)
+                            ack_xml = samdbhelper.render_root_dse_xml(**context)
                         elif AttributeType_List == ['addata:msDS-PortLDAP']:
-                            ack_xml = sambautils.render_msds_portldap(**context)
+                            ack_xml = samdbhelper.render_msds_portldap(**context)
                     else:
                         # search object
-                        ack_xml = sambautils.render_transfer_get(**context)
+                        ack_xml = samdbhelper.render_transfer_get(**context)
                         need_endrecord = True
                 elif context['Action'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate':
                     enumeration_context = {}
@@ -168,7 +170,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                     EnumerationContext_Dict[EnumerationContext] = enumeration_context
 
                     context['EnumerationContext'] = EnumerationContext
-                    ack_xml = sambautils.render_enumerate(**context)
+                    ack_xml = samdbhelper.render_enumerate(**context)
 
                 elif context['Action'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull':
                     context['MaxElements'] = xmlhelper.get_elem_text('.//wsen:MaxElements')
@@ -179,7 +181,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
                     context.update(enumeration_context)
 
-                    ack_xml = sambautils.render_pull(**context)
+                    ack_xml = samdbhelper.render_pull(**context)
 
                 assert ack_xml, 'I do not know how to answer'
 
