@@ -231,7 +231,7 @@ def main():
         log.error("GSSAPI not available, negotiation not possible. Try python2 with gssapi")
         sys.exit(1)
 
-    server = SocketServer.TCPServer((args.bind, args.port), NETTCPProxy)
+    server = SocketServer.ForkingTCPServer((args.bind, args.port), NETTCPProxy)
 
     server.serve_forever()
 
