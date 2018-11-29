@@ -12,9 +12,9 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
-            {%- for attr in attrs %}
-            {{attr.to_xml()|safe}}
-            {%- endfor %}
+{%- for attr in attrs %}
+{{attr.to_xml()|safe}}
+{%- endfor %}
 
         </addata:top>
     </s:Body>
