@@ -354,6 +354,14 @@ class SizedEnvelopedMessageRecord(Record):
         ('Payload', pt(raw_bytes, 'Size'))
     )
 
+    def __repr__(self):
+        # do not print too much bytes of the Payload
+        fields = [
+            'Size={}'.format(self.Size),
+            'Payload={!r}...'.format(self.Payload[:10]),
+        ]
+        return '{}({})'.format(type(self).__name__, ', '.join(fields))
+
     def payload_to_xml(self):
         from .protocol2xml import build_dictionary
         from wcf.records import Record, print_records
