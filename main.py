@@ -80,6 +80,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
         EnumerationContext_Dict = {}
 
         self.stream = SocketStream(self.request)
+        negotiated = False
         request_index = 0
 
         samdbhelper = sambautils.SamDBHelper()
@@ -111,9 +112,13 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 pass
             elif obj.code == UpgradeRequestRecord.code:
                 self.send_record(UpgradeResponseRecord())
-
-                self.stream = GENSECStream(self.stream)
-                self.stream.negotiate_server()
+                if not negotiated:
+                    self.stream = GENSECStream(self.stream)
+                    self.stream.negotiate_server()
+                    negotiated = True
+                    print('negotiate finished')
+                else:
+                    print('negotiate skipped')
             elif obj.code == PreambleEndRecord.code:
                 self.send_record(PreambleAckRecord())
             elif obj.code == SizedEnvelopedMessageRecord.code:
