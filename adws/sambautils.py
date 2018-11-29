@@ -23,9 +23,6 @@ ENV = Environment(
     autoescape=select_autoescape(['xml']),
 )
 
-lp = LoadParm()
-lp.load_default()
-samdb = SamDB(lp=lp, session_info=system_session())
 
 # https://msdn.microsoft.com/en-us/library/dd340513.aspx
 SCOPE_ADLQ_TO_LDB = {
@@ -94,15 +91,6 @@ ROOT_DSE_ATTRS = {
     'supportedLDAPVersion': ldb.SYNTAX_INTEGER,
     # 'verdorName': 'not exist',
 }
-
-def get_rootdse_attr_schema_syntax(attr):
-    oid = ROOT_DSE_ATTRS.get(attr)
-    return oid and OID_SCHEMA_SYNTAX_DICT.get(oid) or None
-
-def get_attr_schema_syntax(attr):
-    oid = samdb.get_syntax_oid_from_lDAPDisplayName(attr)
-    return oid and OID_SCHEMA_SYNTAX_DICT.get(oid) or None
-
 
 LDAP_ATTR_TEMPLATE = """
 <addata:{{obj.attr}} LdapSyntax="{{obj.ldap_syntax}}">
@@ -173,116 +161,136 @@ def get_rdn(dn):
     return ''
 
 
-def build_attr_list(msg, func_get_syntax, attr_names=[]):
-    if not attr_names:
-        attr_names = list(msg.keys())
-        attr_names.remove('dn')
-        attr_names.remove('vendorName')
+class SamDBHelper(SamDB):
 
-    attrs = []
-    for attr_name in attr_names:
-        attr_obj = None
-        vals = msg.get(attr_name, None)
-        if vals is not None:
-            if attr_name in SYNTHETIC_ATTRS:
-                attr_obj = SyntheticAttr(attr_name, vals)
-            else:
-                syntax = func_get_syntax(attr_name)
-                assert syntax, 'syntax not found for %s' % attr_name
-                if syntax:
-                    attr_obj = LdapAttr(
-                        attr_name, vals,
-                        syntax.ldap_syntax, syntax.xsi_type)
+    def __init__(self):
+        lp = LoadParm()
+        lp.load_default()
+        SamDB.__init__(self, lp=lp, session_info=system_session())
+
+    def get_rootdse_attr_schema_syntax(self, attr):
+        oid = ROOT_DSE_ATTRS.get(attr)
+        return oid and OID_SCHEMA_SYNTAX_DICT.get(oid) or None
+
+    def get_attr_schema_syntax(self, attr, is_root_dse=False):
+        if is_root_dse:
+            oid = ROOT_DSE_ATTRS.get(attr)
         else:
-            if attr_name == 'relativeDistinguishedName':
-                attr_obj = SyntheticAttr(attr_name, [get_rdn(msg['dn'])])
-        if attr_obj:
-            attrs.append(attr_obj)
+            oid = self.get_syntax_oid_from_lDAPDisplayName(attr)
+        return oid and OID_SCHEMA_SYNTAX_DICT.get(oid) or None
 
-    return attrs
+    def build_attr_list(self, msg, is_root_dse=False, attr_names=[]):
+        if not attr_names:
+            attr_names = list(msg.keys())
+            attr_names.remove('dn')
+            attr_names.remove('vendorName')
 
-def render_root_dse_xml(**context):
-    # ldb.Result
-    result = samdb.search(base='', scope=ldb.SCOPE_BASE)
-    # ldb.MessageElement
-    msg = result[0]
+        attrs = []
+        for attr_name in attr_names:
+            attr_obj = None
+            vals = msg.get(attr_name, None)
+            if vals is not None:
+                if attr_name in SYNTHETIC_ATTRS:
+                    attr_obj = SyntheticAttr(attr_name, vals)
+                else:
+                    syntax = self.get_attr_schema_syntax(
+                        attr_name, is_root_dse=is_root_dse)
+                    assert syntax, 'syntax not found for %s' % attr_name
+                    if syntax:
+                        attr_obj = LdapAttr(
+                            attr_name, vals,
+                            syntax.ldap_syntax, syntax.xsi_type)
+            else:
+                if attr_name == 'relativeDistinguishedName':
+                    attr_obj = SyntheticAttr(attr_name, [get_rdn(msg['dn'])])
+            if attr_obj:
+                attrs.append(attr_obj)
 
-    attrs = build_attr_list(msg, get_rootdse_attr_schema_syntax)
-    # this one appears first
-    attrs.insert(0, SyntheticAttr('objectReferenceProperty', [ROOT_DSE_GUID]))
-    # these 3 appear at last
-    attrs.append(SyntheticAttr('container-hierarchy-parent', [ROOT_DSE_GUID]))
-    attrs.append(SyntheticAttr('relativeDistinguishedName', ['']))
-    attrs.append(SyntheticAttr('distinguishedName', ['']))
-    context['attrs'] = attrs
-    return render_template('root-DSE.xml', **context)
+        return attrs
 
 
-def render_msds_portldap(**context):
-    # return a fixed xml for now
-    return render_template('msDS-PortLDAP.xml', **context)
+    def render_root_dse_xml(self, **context):
+        # ldb.Result
+        result = self.search(base='', scope=ldb.SCOPE_BASE)
+        # ldb.MessageElement
+        msg = result[0]
 
-# def render_get(identifier, attrs, controls, **kwargs):
-def render_transfer_get(**context):
-    # the attrs client is asking for, e.g: addata:msDS-PortLDAP
-    AttributeType_List = context['AttributeType_List']
-    # attrs without ns prefix, keep the order which matters
-    attr_names = [attr.split(':')[-1] for attr in AttributeType_List]
+        attrs = self.build_attr_list(msg, is_root_dse=True)
+        # this one appears first
+        attrs.insert(0, SyntheticAttr('objectReferenceProperty', [ROOT_DSE_GUID]))
+        # these 3 appear at last
+        attrs.append(SyntheticAttr('container-hierarchy-parent', [ROOT_DSE_GUID]))
+        attrs.append(SyntheticAttr('relativeDistinguishedName', ['']))
+        attrs.append(SyntheticAttr('distinguishedName', ['']))
+        context['attrs'] = attrs
+        return render_template('root-DSE.xml', **context)
 
-    result = samdb.search(
-        base=context['objectReferenceProperty'],
-        attrs=attr_names,
-        controls=[])
 
-    msg = result[0]
+    def render_msds_portldap(self, **context):
+        # return a fixed xml for now
+        return render_template('msDS-PortLDAP.xml', **context)
 
-    attrs = build_attr_list(msg, get_attr_schema_syntax, attr_names=attr_names)
-    # attrs.append(SyntheticAttr('distinguishedName', [str(msg.dn)]))
-    # attrs.append(SyntheticAttr('relativeDistinguishedName', ['TODO']))
-    context['attrs'] = attrs
+    # def render_get(identifier, attrs, controls, **kwargs):
+    def render_transfer_get(self, **context):
+        # the attrs client is asking for, e.g: addata:msDS-PortLDAP
+        AttributeType_List = context['AttributeType_List']
+        # attrs without ns prefix, keep the order which matters
+        attr_names = [attr.split(':')[-1] for attr in AttributeType_List]
 
-    return render_template('transfer-Get.xml', **context)
+        result = self.search(
+            base=context['objectReferenceProperty'],
+            attrs=attr_names,
+            controls=[])
 
-def render_enumerate(**context):
-    return render_template('Enumerate.xml', **context)
+        msg = result[0]
 
-def render_pull(**context):
-    SelectionProperty_List = context['SelectionProperty_List']
-    enumeration_context = context['EnumerationContext']
-    cookie = enumeration_context.get('cookie', '')
+        attrs = self.build_attr_list(msg, attr_names=attr_names)
+        # attrs.append(SyntheticAttr('distinguishedName', [str(msg.dn)]))
+        # attrs.append(SyntheticAttr('relativeDistinguishedName', ['TODO']))
+        context['attrs'] = attrs
 
-    attr_names = [attr.split(':')[-1] for attr in SelectionProperty_List]
-    LdapQuery = context['LdapQuery']
-    MaxElements = context['MaxElements']
+        return render_template('transfer-Get.xml', **context)
 
-    scope = SCOPE_ADLQ_TO_LDB[LdapQuery['Scope'].lower()]
-    result = samdb.search(
-        base=LdapQuery['BaseObject'],
-        scope=scope,
-        expression=LdapQuery['Filter'],
-        attrs=attr_names,
-        controls=['paged_results:1:%s%s' % (MaxElements, cookie)]
-    )
+    def render_enumerate(self, **context):
+        return render_template('Enumerate.xml', **context)
 
-    ctrls = [str(c) for c in result.controls if
-             str(c).startswith("paged_results")]
-    spl = ctrls[0].rsplit(':', 3)
-    if len(spl) == 3:
-        new_cookie = ':' + spl[-1]
-        enumeration_context['cookie'] = new_cookie
-        context['is_end'] = False
-    else:
-        # Set finish sequence
-        context['is_end'] = True
+    def render_pull(self, **context):
+        SelectionProperty_List = context['SelectionProperty_List']
+        enumeration_context = context['EnumerationContext']
+        cookie = enumeration_context.get('cookie', '')
 
-    objects = [
-        build_attr_list(msg, get_attr_schema_syntax, attr_names=attr_names)
-        for msg in result.msgs
-    ]
-    context['objects'] = objects
-    # import ipdb; ipdb.set_trace()
+        attr_names = [attr.split(':')[-1] for attr in SelectionProperty_List]
+        LdapQuery = context['LdapQuery']
+        MaxElements = context['MaxElements']
 
-    return render_template('Pull.xml', **context)
+        scope = SCOPE_ADLQ_TO_LDB[LdapQuery['Scope'].lower()]
+        result = self.search(
+            base=LdapQuery['BaseObject'],
+            scope=scope,
+            expression=LdapQuery['Filter'],
+            attrs=attr_names,
+            controls=['paged_results:1:%s%s' % (MaxElements, cookie)]
+        )
+
+        ctrls = [str(c) for c in result.controls if
+                 str(c).startswith("paged_results")]
+        spl = ctrls[0].rsplit(':', 3)
+        if len(spl) == 3:
+            new_cookie = ':' + spl[-1]
+            enumeration_context['cookie'] = new_cookie
+            context['is_end'] = False
+        else:
+            # Set finish sequence
+            context['is_end'] = True
+
+        objects = [
+            self.build_attr_list(msg, attr_names=attr_names)
+            for msg in result.msgs
+        ]
+        context['objects'] = objects
+        # import ipdb; ipdb.set_trace()
+
+        return render_template('Pull.xml', **context)
 
 
 if __name__ == '__main__':
