@@ -116,10 +116,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 self.stream = GENSECStream(self.stream)
                 self.stream.negotiate_server()
                 self.negotiated = True
-
-                preamble_end = Record.parse_stream(self.stream)
-                assert preamble_end.code == PreambleEndRecord.code, preamble_end
-
+            elif obj.code == PreambleEndRecord.code:
                 self.send_record(PreambleAckRecord())
             elif obj.code == SizedEnvelopedMessageRecord.code:
 
