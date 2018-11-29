@@ -179,12 +179,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
 
 def main():
-
-    HOST, PORT = "localhost", 8090
-
     parser = argparse.ArgumentParser()
-    parser.add_argument('-b', '--bind', default=HOST)
-    parser.add_argument('-p', '--port', type=int, default=PORT)
+    parser.add_argument('-b', '--bind', default='localhost')
+    parser.add_argument('-p', '--port', type=int, default=9389)
     args = parser.parse_args()
 
     nmf.register_types()
