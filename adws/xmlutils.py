@@ -69,15 +69,18 @@ class XMLHelper(object):
         # root ns + common ns
         self.nsmap.update(NAMESPACES)
 
+        self.header = self.get_elem('s:Header')
+        self.body = self.get_elem('s:Body')
+
     def get_elem(self, xpath, as_text=False):
-        elem = self.root.find(xpath, self.nsmap)
+        elem = self.root.find(xpath, namespaces=self.nsmap)
         return elem_get_text(elem) if as_text else elem
 
     def get_elem_text(self, xpath):
         return self.get_elem(xpath, as_text=True)
 
     def get_elem_list(self, xpath, as_text=False):
-        elems = self.root.findall(xpath, self.nsmap)
+        elems = self.root.findall(xpath, namespaces=self.nsmap)
         return [elem.text.strip() for elem in elems] if as_text else elems
 
     def is_elem_empty(self, xpath):
