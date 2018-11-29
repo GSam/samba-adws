@@ -24,15 +24,16 @@ from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
 from adws import sambautils
 from adws import xmlutils
 
-FORMAT = '%(levelname)s %(asctime)s %(pathname)s #%(lineno)d: %(message)s'
-logging.basicConfig(level=logging.CRITICAL, format=FORMAT)
-log = logging.getLogger(__name__ + '.NETTCPProxy')
+FORMAT = ('%(levelname)s %(asctime)s pid:%(process)d '
+          '%(pathname)s #%(lineno)d: %(message)s')
+logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+LOG = logging.getLogger(__name__)
 
 trace_file = None
 
 
 def print_data(msg, data):
-    if log.isEnabledFor(logging.DEBUG):
+    if LOG.isEnabledFor(logging.DEBUG):
         print(msg, file=sys.stderr)
         print_hexdump(data, colored=True, file=sys.stderr)
 
