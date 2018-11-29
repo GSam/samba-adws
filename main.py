@@ -9,8 +9,6 @@ import logging
 import binascii
 import argparse
 
-from datetime import datetime
-
 try:
     import SocketServer
 except ImportError:
@@ -30,8 +28,6 @@ FORMAT = ('%(levelname)s %(asctime)s pid:%(process)d '
 logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 LOG = logging.getLogger(__name__)
 
-trace_file = None
-
 
 def print_data(msg, data):
     if LOG.isEnabledFor(logging.DEBUG):
@@ -40,14 +36,6 @@ def print_data(msg, data):
 
 
 class NETTCPProxy(SocketServer.BaseRequestHandler):
-
-    def log_data(self, direction, data):
-        if trace_file is None:
-            return
-
-        args = self.client_address + (direction, binascii.b2a_hex(data).decode())
-        trace_file.write('{}\t{}:{}\t{}\t{}\n'.format(datetime.today(), *args))
-        trace_file.flush()
 
     def send_record(self, record):
         print('<<<<Server record: %s' % record)
@@ -191,24 +179,19 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
 
 def main():
-    global trace_file
 
     HOST, PORT = "localhost", 8090
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--trace_file', type=argparse.FileType('w'))
     parser.add_argument('-b', '--bind', default=HOST)
     parser.add_argument('-p', '--port', type=int, default=PORT)
     args = parser.parse_args()
 
-    trace_file = args.trace_file
-
     nmf.register_types()
 
-
     server = SocketServer.ForkingTCPServer((args.bind, args.port), NETTCPProxy)
-
     server.serve_forever()
+
 
 if __name__ == "__main__":
     main()
