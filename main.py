@@ -72,6 +72,8 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
         trace_file.flush()
 
     def handle(self):
+        # this func is called in __init__ of base class
+        print('\n\na new handler instance created, handle start')
 
         EnumerationContext_Dict = {}
 
@@ -81,8 +83,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
         while self.stream:
             print('while loop start...')
+
             obj = Record.parse_stream(self.stream)
-            print('Client record: %s' % obj)
+            print('\n\n>>>>Client record: %s' % obj)
 
             # data = obj.to_bytes()
 
