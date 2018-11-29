@@ -57,7 +57,6 @@ def print_data(msg, data):
         else:
             print(data, file=sys.stderr)
 
-request_index = 0
 
 class NETTCPProxy(SocketServer.BaseRequestHandler):
     server_name = None
@@ -81,6 +80,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
         EnumerationContext_Dict = {}
 
         self.stream = SocketStream(self.request)
+        request_index = 0
 
         samdbhelper = sambautils.SamDBHelper()
 
@@ -119,8 +119,6 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
             elif obj.code == SizedEnvelopedMessageRecord.code:
 
                 xml = obj.payload_to_xml()
-
-                global request_index
 
                 xmlutils.print_xml(xml, request_index, mode='w+')
 
