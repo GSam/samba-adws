@@ -60,7 +60,6 @@ def print_data(msg, data):
 request_index = 0
 
 class NETTCPProxy(SocketServer.BaseRequestHandler):
-    negoiate = True
     server_name = None
 
     def log_data(self, direction, data):
@@ -115,7 +114,6 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
                 self.stream = GENSECStream(self.stream)
                 self.stream.negotiate_server()
-                self.negotiated = True
             elif obj.code == PreambleEndRecord.code:
                 self.send_record(PreambleAckRecord())
             elif obj.code == SizedEnvelopedMessageRecord.code:
