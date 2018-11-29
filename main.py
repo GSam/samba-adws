@@ -29,17 +29,9 @@ from nettcp.nmf import (Record, EndRecord, KnownEncodingRecord,
                   PreambleEndRecord, PreambleAckRecord,
                   SizedEnvelopedMessageRecord,
                   register_types)
-try:
-    from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
-except ImportError:
-    warnings.warn('gssapi not installed, no negotiate protocol available')
-    GSSAPIStream = None
 
-try:
-    from helperlib import print_hexdump
-except ImportError:
-    warnings.warn('python-helperlib not installed, no hexdump available (https://github.com/bluec0re/python-helperlib)')
-    print_hexdump = False
+from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
+from helperlib import print_hexdump
 
 
 FORMAT = '%(levelname)s %(asctime)s %(pathname)s #%(lineno)d: %(message)s'
@@ -52,10 +44,7 @@ trace_file = None
 def print_data(msg, data):
     if log.isEnabledFor(logging.DEBUG):
         print(msg, file=sys.stderr)
-        if print_hexdump:
-            print_hexdump(data, colored=True, file=sys.stderr)
-        else:
-            print(data, file=sys.stderr)
+        print_hexdump(data, colored=True, file=sys.stderr)
 
 
 class NETTCPProxy(SocketServer.BaseRequestHandler):
