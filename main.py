@@ -84,7 +84,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
         samdbhelper = sambautils.SamDBHelper()
 
-        while self.stream:
+        while True:
             print('while loop start...')
 
             obj = Record.parse_stream(self.stream)
