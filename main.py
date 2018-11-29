@@ -201,14 +201,10 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 assert ack2.Size == ack.Size
                 assert ack2.Payload == ack.Payload
                 self.stream.write(ack.to_bytes())
-                # self.stream.close()
-
             elif obj.code == EndRecord.code:
                 break
-                # self.stream.close()
 
         print('exit handle')
-
 
 
 def main():
