@@ -49,10 +49,19 @@ from wcf.dictionary import *
 
 
 class ShortElementRecord(Element):
+    """
+    Element without a prefix.
+
+    <element xmlns="http://tempuri.org">
+
+    name: element
+    attributes: {'xmlns': 'http://tempuri.org'}
+    """
     type = 0x40
 
     def __init__(self, name, *args, **kwargs):
         self.childs = []
+        assert name != 'xmlns'
         self.name = name
         self.attributes = []
 
@@ -91,6 +100,11 @@ class ShortElementRecord(Element):
 
 
 class ElementRecord(ShortElementRecord):
+    """
+    Element with a prefix.
+
+    <prefix:element xmlns:prefix="http://tempuri.org">
+    """
     type = 0x41
 
     def __init__(self, prefix, name, *args, **kwargs):
@@ -128,6 +142,11 @@ class ElementRecord(ShortElementRecord):
 
 
 class ShortDictionaryElementRecord(Element):
+    """
+    Element without prefix and name is in dictionary.
+
+    So it has an index which is the key for the name in dictionary.
+    """
     type = 0x42
 
     def __init__(self, index, *args, **kwargs):
@@ -170,6 +189,9 @@ class ShortDictionaryElementRecord(Element):
 
 
 class DictionaryElementRecord(Element):
+    """
+    Element with prefix and name is in dictionary.
+    """
     type = 0x43
 
     def __init__(self, prefix, index, *args, **kwargs):
@@ -220,6 +242,9 @@ class DictionaryElementRecord(Element):
 
 
 class PrefixElementRecord(ElementRecord):
+    """
+    Element with single char prefix.
+    """
     def __init__(self, name):
         super(PrefixElementRecord, self).__init__(self.char, name)
 
@@ -251,6 +276,9 @@ class PrefixElementRecord(ElementRecord):
 
 
 class PrefixDictionaryElementRecord(DictionaryElementRecord):
+    """
+    Element with a single lower case char prefix which is in dictionary.
+    """
     def __init__(self, index):
         super(PrefixDictionaryElementRecord, self).__init__(self.char, index)
 
