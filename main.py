@@ -71,6 +71,10 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
         trace_file.write('{}\t{}:{}\t{}\t{}\n'.format(datetime.today(), *args))
         trace_file.flush()
 
+    def send_record(self, record):
+        print('<<<<Server record: %s' % record)
+        self.stream.write(record.to_bytes())
+
     def handle(self):
         # this func is called in __init__ of base class
         print('\n\na new handler instance created, handle start')
@@ -107,8 +111,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 # t.start()
                 pass
             elif obj.code == UpgradeRequestRecord.code:
-                upgr = UpgradeResponseRecord().to_bytes()
-                self.stream.write(upgr)
+                self.send_record(UpgradeResponseRecord())
 
                 self.stream = GENSECStream(self.stream)
                 self.stream.negotiate_server()
@@ -117,8 +120,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 preamble_end = Record.parse_stream(self.stream)
                 assert preamble_end.code == PreambleEndRecord.code, preamble_end
 
-                preamble_ack = PreambleAckRecord().to_bytes()
-                self.stream.write(preamble_ack)
+                self.send_record(PreambleAckRecord())
             elif obj.code == SizedEnvelopedMessageRecord.code:
 
                 xml = obj.payload_to_xml()
@@ -203,7 +205,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 _, ack2 = Record.parse(ack.to_bytes())
                 assert ack2.Size == ack.Size
                 assert ack2.Payload == ack.Payload
-                self.stream.write(ack.to_bytes())
+                self.send_record(ack)
             elif obj.code == EndRecord.code:
                 break
 
