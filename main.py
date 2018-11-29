@@ -59,7 +59,6 @@ def print_data(msg, data):
 
 
 class NETTCPProxy(SocketServer.BaseRequestHandler):
-    server_name = None
 
     def log_data(self, direction, data):
         if trace_file is None:
@@ -86,10 +85,10 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
         samdbhelper = sambautils.SamDBHelper()
 
         while True:
-            print('while loop start...')
 
+            print('\n\nparsing stream...')
             obj = Record.parse_stream(self.stream)
-            print('\n\n>>>>Client record: %s' % obj)
+            print('>>>>Client record: %s' % obj)
 
             # data = obj.to_bytes()
 
@@ -220,19 +219,12 @@ def main():
     parser.add_argument('-t', '--trace_file', type=argparse.FileType('w'))
     parser.add_argument('-b', '--bind', default=HOST)
     parser.add_argument('-p', '--port', type=int, default=PORT)
-    parser.add_argument('-n', '--negotiate', help='Negotiate with the given server name')
     args = parser.parse_args()
 
     trace_file = args.trace_file
 
     register_types()
 
-    NETTCPProxy.negotiate = bool(args.negotiate)
-    NETTCPProxy.server_name = args.negotiate
-
-    if GSSAPIStream is None and NETTCPProxy.negotiate:
-        log.error("GSSAPI not available, negotiation not possible. Try python2 with gssapi")
-        sys.exit(1)
 
     server = SocketServer.ForkingTCPServer((args.bind, args.port), NETTCPProxy)
 
