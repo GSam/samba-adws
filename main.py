@@ -2,37 +2,27 @@
 # encoding: utf-8
 # Copyright 2016 Timo Schmid
 from __future__ import print_function, unicode_literals, absolute_import
-from datetime import datetime
-from io import BytesIO, StringIO
 
-import uuid
-import socket
-import logging
 import sys
+import uuid
+import logging
 import binascii
-import threading
-import warnings
 
-from nettcp.nmf import Record as NMFRecord, register_types
-
-from adws import sambautils
-from adws import xmlutils
+from datetime import datetime
 
 try:
     import SocketServer
 except ImportError:
     import socketserver as SocketServer
 
-from nettcp.stream.socket import SocketStream
-from nettcp.nmf import (Record, EndRecord, KnownEncodingRecord,
-                  UpgradeRequestRecord, UpgradeResponseRecord,
-                  PreambleEndRecord, PreambleAckRecord,
-                  SizedEnvelopedMessageRecord,
-                  register_types)
-
-from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
 from helperlib import print_hexdump
 
+from nettcp import nmf
+from nettcp.stream.socket import SocketStream
+from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
+
+from adws import sambautils
+from adws import xmlutils
 
 FORMAT = '%(levelname)s %(asctime)s %(pathname)s #%(lineno)d: %(message)s'
 logging.basicConfig(level=logging.CRITICAL, format=FORMAT)
@@ -76,7 +66,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
         while True:
 
             print('\n\nparsing stream...')
-            obj = Record.parse_stream(self.stream)
+            obj = nmf.Record.parse_stream(self.stream)
             print('>>>>Client record: %s' % obj)
 
             # data = obj.to_bytes()
@@ -87,7 +77,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
             # self.stream.write(data)
 
-            if obj.code == KnownEncodingRecord.code:
+            if obj.code == nmf.KnownEncodingRecord.code:
                 # if self.negotiate:
                 #     upgr = UpgradeRequestRecord(UpgradeProtocolLength=21,
                 #                                 UpgradeProtocol='application/negotiate').to_bytes()
@@ -98,8 +88,8 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 # start receive thread
                 # t.start()
                 pass
-            elif obj.code == UpgradeRequestRecord.code:
-                self.send_record(UpgradeResponseRecord())
+            elif obj.code == nmf.UpgradeRequestRecord.code:
+                self.send_record(nmf.UpgradeResponseRecord())
                 if not negotiated:
                     self.stream = GENSECStream(self.stream)
                     self.stream.negotiate_server()
@@ -107,9 +97,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                     print('negotiate finished')
                 else:
                     print('negotiate skipped')
-            elif obj.code == PreambleEndRecord.code:
-                self.send_record(PreambleAckRecord())
-            elif obj.code == SizedEnvelopedMessageRecord.code:
+            elif obj.code == nmf.PreambleEndRecord.code:
+                self.send_record(nmf.PreambleAckRecord())
+            elif obj.code == nmf.SizedEnvelopedMessageRecord.code:
 
                 xml = obj.payload_to_xml()
 
@@ -184,15 +174,15 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
                 size = len(payload) + 1
                 print('output payload size: %d' % size)
-                ack = SizedEnvelopedMessageRecord(
+                ack = nmf.SizedEnvelopedMessageRecord(
                     Payload=b'\x00' + payload,
                     Size=size
                 )
-                _, ack2 = Record.parse(ack.to_bytes())
+                _, ack2 = nmf.Record.parse(ack.to_bytes())
                 assert ack2.Size == ack.Size
                 assert ack2.Payload == ack.Payload
                 self.send_record(ack)
-            elif obj.code == EndRecord.code:
+            elif obj.code == nmf.EndRecord.code:
                 break
 
         print('exit handle')
@@ -212,7 +202,7 @@ def main():
 
     trace_file = args.trace_file
 
-    register_types()
+    nmf.register_types()
 
 
     server = SocketServer.ForkingTCPServer((args.bind, args.port), NETTCPProxy)
