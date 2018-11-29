@@ -7,6 +7,7 @@ import sys
 import uuid
 import logging
 import binascii
+import argparse
 
 from datetime import datetime
 
@@ -190,7 +191,6 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
 
 def main():
-    import argparse
     global trace_file
 
     HOST, PORT = "localhost", 8090
