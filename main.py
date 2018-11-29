@@ -141,7 +141,6 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 }
 
                 ack_xml = None
-                need_endrecord = False
 
                 if context['Action'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Get':
                     if sambautils.is_rootDSE(context['objectReferenceProperty']):
@@ -153,7 +152,6 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                     else:
                         # search object
                         ack_xml = samdbhelper.render_transfer_get(**context)
-                        need_endrecord = True
                 elif context['Action'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate':
                     enumeration_context = {}
                     ldapquery_elem = xmlhelper.get_elem('.//adlq:LdapQuery')
@@ -203,9 +201,6 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 assert ack2.Size == ack.Size
                 assert ack2.Payload == ack.Payload
                 self.stream.write(ack.to_bytes())
-                if need_endrecord:
-                    self.stream.write(EndRecord().to_bytes())
-                    break
                 # self.stream.close()
 
             elif obj.code == EndRecord.code:
