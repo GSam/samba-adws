@@ -37,8 +37,6 @@ import logging
 from wcf.datatypes import *
 
 log = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
-
 
 class Record(object):
     records = dict()
