@@ -5,10 +5,11 @@ from __future__ import print_function, unicode_literals, absolute_import
 
 import sys
 import uuid
-import logging
 import binascii
 import argparse
 
+import logging
+from logging.config import dictConfig
 try:
     import SocketServer
 except ImportError:
@@ -23,9 +24,36 @@ from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
 from adws import sambautils
 from adws import xmlutils
 
-FORMAT = ('%(levelname)s %(asctime)s pid:%(process)d '
-          '%(pathname)s #%(lineno)d: %(message)s')
-logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+LOG_FORMAT = ('%(levelname)s %(asctime)s pid:%(process)d '
+          '%(name)s %(pathname)s #%(lineno)d: %(message)s')
+
+LOG_CONFIG = {
+    'version': 1,
+    'formatters': {
+        'verbose': {'format': LOG_FORMAT},
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'level': logging.DEBUG,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': logging.DEBUG,
+    },
+    'loggers': {
+        'wcf': {
+            'level': logging.WARN,
+        },
+        'nettcp': {
+            'level': logging.WARN,
+        },
+    },
+}
+
+dictConfig(LOG_CONFIG)
 LOG = logging.getLogger(__name__)
 
 
