@@ -206,6 +206,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
         LOG.INFO('exit handle')
 
+    def finish(self):
+        self.stream.close()
+
 
 def main():
     parser = argparse.ArgumentParser()
