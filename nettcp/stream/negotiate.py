@@ -87,3 +87,6 @@ class NegotiateStream:
                                 payload_size=len(data)
                             ).to_bytes()
         self._inner.write(handshake + data)
+
+    def close(self):
+        self._inner.close()
