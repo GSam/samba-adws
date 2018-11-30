@@ -205,10 +205,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
             elif obj.code == nmf.EndRecord.code:
                 break
 
-        LOG.INFO('exit handle')
-
     def finish(self):
         self.stream.close()
+        LOG.info('close stream and exit handle')
 
 
 def main():
