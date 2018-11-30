@@ -66,12 +66,12 @@ def print_data(msg, data):
 class NETTCPProxy(SocketServer.BaseRequestHandler):
 
     def send_record(self, record):
-        print('<<<<Server record: %s' % record)
+        LOG.debug('<<<<Server record: %s' % record)
         self.stream.write(record.to_bytes())
 
     def handle(self):
         # this func is called in __init__ of base class
-        print('\n\na new handler instance created, handle start')
+        LOG.info('start handle request')
 
         EnumerationContext_Dict = {}
 
@@ -83,9 +83,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
         while True:
 
-            print('\n\nparsing stream...')
+            LOG.debug('\n\nstart parsing stream...')
             obj = nmf.Record.parse_stream(self.stream)
-            print('>>>>Client record: %s' % obj)
+            LOG.info('>>>>Client record: %s' % obj)
 
             # data = obj.to_bytes()
 
@@ -109,12 +109,13 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
             elif obj.code == nmf.UpgradeRequestRecord.code:
                 self.send_record(nmf.UpgradeResponseRecord())
                 if not negotiated:
+                    LOG.info('negotiate started')
                     self.stream = GENSECStream(self.stream)
                     self.stream.negotiate_server()
                     negotiated = True
-                    print('negotiate finished')
+                    LOG.info('negotiate finished')
                 else:
-                    print('negotiate skipped')
+                    LOG.info('negotiate skipped')
             elif obj.code == nmf.PreambleEndRecord.code:
                 self.send_record(nmf.PreambleAckRecord())
             elif obj.code == nmf.SizedEnvelopedMessageRecord.code:
@@ -203,7 +204,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
             elif obj.code == nmf.EndRecord.code:
                 break
 
-        print('exit handle')
+        LOG.INFO('exit handle')
 
 
 def main():
