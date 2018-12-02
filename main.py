@@ -3,35 +3,16 @@
 # Copyright 2016 Timo Schmid
 from __future__ import print_function, unicode_literals, absolute_import
 
-import sys
-import uuid
-import binascii
-import argparse
-
 import logging
 from logging.config import dictConfig
-try:
-    import SocketServer
-except ImportError:
-    import socketserver as SocketServer
 
-from helperlib import print_hexdump
-
-from nettcp import nmf
-from nettcp.stream.socket import SocketStream
-from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
-
-from wcf.xml2records import XMLParser
-from wcf.records import dump_records
-
-from adws import sambautils
-from adws import xmlutils
-
-LOG_FORMAT = ('%(levelname)s %(asctime)s pid:%(process)d '
-          '%(name)s %(pathname)s #%(lineno)d: %(message)s')
+LOG_FORMAT = ('%(levelname)-10s %(asctime)s pid:%(process)d '
+              '%(name)s %(pathname)s #%(lineno)d: %(message)s')
 
 LOG_CONFIG = {
     'version': 1,
+    'incremental': False,
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {'format': LOG_FORMAT},
     },
@@ -53,11 +34,38 @@ LOG_CONFIG = {
         'nettcp': {
             'level': logging.WARN,
         },
+        'adws': {
+            'level': logging.DEBUG,
+        },
     },
 }
 
 dictConfig(LOG_CONFIG)
 LOG = logging.getLogger(__name__)
+
+# must be after dictConfig, otherwise log in these packages
+# will not be configed as expected
+import sys
+import uuid
+import binascii
+import argparse
+
+try:
+    import SocketServer
+except ImportError:
+    import socketserver as SocketServer
+
+from helperlib import print_hexdump
+
+from nettcp import nmf
+from nettcp.stream.socket import SocketStream
+from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
+
+from wcf.xml2records import XMLParser
+from wcf.records import dump_records
+
+from adws import sambautils
+from adws import xmlutils
 
 
 def print_data(msg, data):
