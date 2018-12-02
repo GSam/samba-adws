@@ -164,6 +164,18 @@ class SamDBHelper(SamDB):
         lp.load_default()
         SamDB.__init__(self, lp=lp, session_info=system_session())
 
+    def search_scope_base(self, *args, **kwargs):
+        kwargs['scope'] = ldb.SCOPE_BASE
+        return self.search(*args, **kwargs)
+
+    def search_scope_onelevel(self, *args, **kwargs):
+        kwargs['scope'] = ldb.SCOPE_ONELEVEL
+        return self.search(*args, **kwargs)
+
+    def search_scope_subtree(self, *args, **kwargs):
+        kwargs['scope'] = ldb.SCOPE_SUBTREE
+        return self.search(*args, **kwargs)
+
     def get_rootdse_attr_schema_syntax(self, attr):
         oid = ROOT_DSE_ATTRS.get(attr)
         return oid and OID_SCHEMA_SYNTAX_DICT.get(oid) or None
