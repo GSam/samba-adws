@@ -41,7 +41,7 @@ LOG_CONFIG = {
 }
 
 dictConfig(LOG_CONFIG)
-LOG = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 # must be after dictConfig, otherwise log in these packages
 # will not be configed as expected
@@ -69,7 +69,7 @@ from adws import xmlutils
 
 
 def print_data(msg, data):
-    if LOG.isEnabledFor(logging.DEBUG):
+    if log.isEnabledFor(logging.DEBUG):
         print(msg, file=sys.stderr)
         print_hexdump(data, colored=True, file=sys.stderr)
 
@@ -77,12 +77,12 @@ def print_data(msg, data):
 class NETTCPProxy(SocketServer.BaseRequestHandler):
 
     def send_record(self, record):
-        LOG.debug('<<<<Server record: %s' % record)
+        log.debug('<<<<Server record: %s' % record)
         self.stream.write(record.to_bytes())
 
     def handle(self):
         # this func is called in __init__ of base class
-        LOG.info('start handle request')
+        log.info('start handle request')
 
         EnumerationContext_Dict = {}
 
@@ -94,9 +94,9 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
         while True:
 
-            LOG.debug('\n\nstart parsing stream...')
+            log.debug('\n\nstart parsing stream...')
             obj = nmf.Record.parse_stream(self.stream)
-            LOG.info('>>>>Client record: %s' % obj)
+            log.info('>>>>Client record: %s' % obj)
 
             # data = obj.to_bytes()
 
@@ -120,13 +120,13 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
             elif obj.code == nmf.UpgradeRequestRecord.code:
                 self.send_record(nmf.UpgradeResponseRecord())
                 if not negotiated:
-                    LOG.info('negotiate started')
+                    log.info('negotiate started')
                     self.stream = GENSECStream(self.stream)
                     self.stream.negotiate_server()
                     negotiated = True
-                    LOG.info('negotiate finished')
+                    log.info('negotiate finished')
                 else:
-                    LOG.info('negotiate skipped')
+                    log.info('negotiate skipped')
             elif obj.code == nmf.PreambleEndRecord.code:
                 self.send_record(nmf.PreambleAckRecord())
             elif obj.code == nmf.SizedEnvelopedMessageRecord.code:
@@ -215,7 +215,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
 
     def finish(self):
         self.stream.close()
-        LOG.info('close stream and exit handle')
+        log.info('close stream and exit handle')
 
 
 def main():
