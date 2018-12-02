@@ -92,13 +92,12 @@ ROOT_DSE_ATTRS = {
     # 'verdorName': 'not exist',
 }
 
-LDAP_ATTR_TEMPLATE = """
+LDAP_ATTR_TEMPLATE = jinja2.Template("""
 <addata:{{obj.attr}} LdapSyntax="{{obj.ldap_syntax}}">
    {%- for val in obj.vals %}
    <ad:value xsi:type="{{obj.xsi_type}}">{{val}}</ad:value>
    {%- endfor %}
-</addata:{{obj.attr}}>
-"""
+</addata:{{obj.attr}}>""".strip())
 
 
 class LdapAttr(object):
@@ -114,8 +113,7 @@ class LdapAttr(object):
         self.vals = vals
 
     def to_xml(self):
-        template = jinja2.Template(LDAP_ATTR_TEMPLATE.strip())
-        return template.render({'obj': self})
+        return LDAP_ATTR_TEMPLATE.render({'obj': self})
 
 
 # https://msdn.microsoft.com/en-us/library/dd340577.aspx
@@ -126,13 +124,12 @@ SYNTHETIC_ATTRS = {
     'relativeDistinguishedName',
 }
 
-SYNTHETIC_ATTR_TEMPLATE = """
+SYNTHETIC_ATTR_TEMPLATE = jinja2.Template("""
 <ad:{{obj.attr}}>
    {%- for val in obj.vals %}
    <ad:value xsi:type="{{obj.xsi_type}}">{{val}}</ad:value>
    {%- endfor %}
-</ad:{{obj.attr}}>
-"""
+</ad:{{obj.attr}}>""".strip())
 
 
 class SyntheticAttr(object):
@@ -150,8 +147,7 @@ class SyntheticAttr(object):
         self.vals = vals
 
     def to_xml(self):
-        template = jinja2.Template(SYNTHETIC_ATTR_TEMPLATE.strip())
-        return template.render({'obj': self})
+        return SYNTHETIC_ATTR_TEMPLATE.render({'obj': self})
 
 def get_rdn(dn):
     rdn_name = dn.get_rdn_name()
