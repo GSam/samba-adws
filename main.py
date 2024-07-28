@@ -59,7 +59,7 @@ from helperlib import print_hexdump
 
 from nettcp import nmf
 from nettcp.stream.socket import SocketStream
-from nettcp.stream.gssapi import GSSAPIStream, GENSECStream
+from nettcp.stream.gssapi import GENSECStream
 
 from wcf.xml2records import XMLParser
 from wcf.records import dump_records
@@ -197,7 +197,8 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                 xmlutils.print_xml(ack_xml, request_index, mode='a')
                 request_index += 1
 
-                records = XMLParser.parse(ack_xml.encode('utf-8'))
+                #records = XMLParser.parse(ack_xml.encode('utf-8'))
+                records = XMLParser.parse(ack_xml)
                 payload = dump_records(records)
 
                 size = len(payload) + 1

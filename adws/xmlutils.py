@@ -40,12 +40,12 @@ def elem_tostring(elem, pretty_print=True, encoding='unicode'):
 def print_xml(xml, sn=0, mode='w+'):
     # parse to validate
     root = etree.fromstring(xml)
-    # print('######################XML HEAD##########################')
-    # xml2 = etree.tostring(root, pretty_print=True)
-    # print(xml2)
-    # print('######################XML TAIL##########################')
-    with open('/vagrant/%s.xml' % sn, mode) as f:
-        f.write(xml + '\n\n\n')
+    print('######################XML HEAD##########################')
+    xml2 = etree.tostring(root, pretty_print=True)
+    print(xml2)
+    print('######################XML TAIL##########################')
+    #with open('/vagrant/%s.xml' % sn, mode) as f:
+    #    f.write(xml + '\n\n\n')
 
 
 def rm_whitespaces(text):

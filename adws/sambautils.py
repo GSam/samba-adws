@@ -109,7 +109,8 @@ class LdapAttr(object):
         self.xsi_type = xsi_type
 
         if self.xsi_type == 'xsd:base64Binary':
-            vals = [b64encode(val) for val in vals]
+            vals = [b64encode(val).decode('utf-8') for val in vals]
+            #vals = [b64encode(val) for val in vals]
         self.vals = vals
 
     def to_xml(self):
