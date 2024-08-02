@@ -1,0 +1,14 @@
+<xsd:schema xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" 
+             attributeFormDefault="unqualified" 
+             elementFormDefault="qualified" 
+             targetNamespace="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" 
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+
+   <xsd:element name ="top"> 
+     <xsd:complexType> 
+       <xsd:sequence>
+         <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+       </xsd:sequence>
+     </xsd:complexType> 
+   </xsd:element> 
+ </xsd:schema>

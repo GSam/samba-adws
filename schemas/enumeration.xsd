@@ -21,15 +21,21 @@ No other rights are granted by implication, estoppel or otherwise.
 	xmlns:tns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"
 	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:adlq="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/LdapQuery" 
+	xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
 	elementFormDefault="qualified" 
 	blockDefault="#all">
 
 	<xs:import namespace='http://www.w3.org/XML/1998/namespace' 
                    schemaLocation=""/>
 	<xs:import namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing" 
-                   schemaLocation="http/schemas.xmlsoap.org/ws/2004/08/addressing/addressing.xsd"/>
+                   schemaLocation=""/>
+
+       <xs:import namespace="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/LdapQuery"/> 
+       <xs:import namespace="http://schemas.microsoft.com/2008/1/ActiveDirectory"/> 
 
 	<!-- Types and global elements -->
+        <!-- XXX Start update
 	<xs:complexType name="FilterType" mixed="true">
 		<xs:sequence>
 			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
@@ -37,7 +43,20 @@ No other rights are granted by implication, estoppel or otherwise.
 		<xs:attribute name="Dialect" type="xs:anyURI" />
 		<xs:anyAttribute namespace="##other" processContents="lax" />
 	</xs:complexType>
-	
+        -->
+
+        <!--Extended filter type for Enumerate [WSENUM] request--> 
+    
+        <xs:complexType name="FilterType"> 
+          <xs:sequence> 
+            <xs:element minOccurs="0" maxOccurs="1" 
+                           ref="adlq:LdapQuery" /> 
+          </xs:sequence> 
+          <xs:attribute name="Dialect" 
+                        fixed="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/LdapQuery"/> 
+        </xs:complexType> 
+	<!-- END UPDATE -->
+
 	<xs:simpleType name="PositiveDurationType">
 		<xs:restriction base="xs:duration">
 			<xs:minExclusive value="P0Y0M0DT0H0M0S" />
@@ -86,10 +105,19 @@ No other rights are granted by implication, estoppel or otherwise.
 			<xs:sequence>
 				<xs:element name="EndTo" type="wsa:EndpointReferenceType" minOccurs="0" />
 				<xs:element name="Expires" type="tns:ExpirationType" minOccurs="0" />
-				<xs:element name="Filter" type="tns:FilterType" minOccurs="0" />
+		                <!-- XXX Begin -->
+				<xs:element name="Filter" type="tns:FilterType" minOccurs="0" maxOccurs="1"/>
+                                <xs:element ref="ad:Selection" 
+                                             minOccurs="0" maxOccurs="1" /> 
+                                <xs:element ref="ad:Sorting" 
+                                             minOccurs="0" maxOccurs="1" /> 
+		                <!-- Remove
 				<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+				-->
 			</xs:sequence>
+			<!-- XXX 
 			<xs:anyAttribute namespace="##other" processContents="lax" />
+			-->
 		</xs:complexType>
 	</xs:element>
 	
@@ -116,9 +144,15 @@ No other rights are granted by implication, estoppel or otherwise.
 				<xs:element name="MaxTime" type="tns:PositiveDurationType" minOccurs="0" />
 				<xs:element name="MaxElements" type="xs:positiveInteger" minOccurs="0" />
 				<xs:element name="MaxCharacters" type="xs:positiveInteger" minOccurs="0" />
+				<!-- XXX 
 				<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+				-->
+				<xs:element ref="ad:controls" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
+			<!-- XXX 
 			<xs:anyAttribute namespace="##other" processContents="lax" />
+			-->
+			<xs:attribute name="Dialect" type="xs:anyURI" />
 		</xs:complexType>
 	</xs:element>
 	
@@ -129,8 +163,13 @@ No other rights are granted by implication, estoppel or otherwise.
 				<xs:element name="EnumerationContext" type="tns:EnumerationContextType" minOccurs="0" />
 				<xs:element name="Items" type="tns:ItemListType" minOccurs="0" />
 				<xs:element name="EndOfSequence" minOccurs="0" />
+				<!-- XXX -->
+				<xs:element ref="ad:controls" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
+			<!-- XXX 
 			<xs:anyAttribute namespace="##other" processContents="lax" />
+			-->
+			<xs:attribute name="Dialect" type="xs:anyURI" />
 		</xs:complexType>
 	</xs:element>
 	

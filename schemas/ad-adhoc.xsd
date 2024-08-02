@@ -1,0 +1,18 @@
+<xsd:schema 
+     targetNamespace="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+     xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
+     xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess" 
+     elementFormDefault="qualified"> 
+
+<xsd:element type="xsd:string" name="instance"/>
+<xsd:element name="objectReferenceProperty">
+<xsd:complexType mixed="true">
+    <xsd:sequence>
+      <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" processContents="lax" />
+  </xsd:complexType>
+
+</xsd:element>
+</xsd:schema>

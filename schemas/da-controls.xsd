@@ -1,0 +1,164 @@
+<xsd:schema xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory"
+            xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer"
+            elementFormDefault="qualified"
+            targetNamespace="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">
+
+  <xsd:import namespace="http://schemas.microsoft.com/2008/1/ActiveDirectory" />
+  <xsd:import namespace="http://schemas.xmlsoap.org/ws/2004/09/transfer" />
+  <xsd:complexType name="ExtensibleType">
+    <xsd:complexContent mixed="true">
+      <xsd:restriction base="xsd:anyType">
+        <xsd:sequence>
+          <xsd:any processContents="lax"
+                   minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+      </xsd:restriction>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:element name="AttributeType">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="da:ExtensibleType" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="ValueXmlType">
+    <xsd:complexContent>
+      <xsd:extension base="da:ExtensibleType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="PartialAttributeXmlType">
+    <xsd:complexContent>
+      <xsd:extension base="da:ExtensibleType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="AttributeTypeAndValueXmlType">
+    <xsd:sequence>
+      <xsd:element ref="da:AttributeType"
+                   minOccurs="1" maxOccurs="1" />
+      <xsd:element name="AttributeValue" type="da:ValueXmlType"
+                   minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="AttributeTypeAndValue"  
+               type="da:AttributeTypeAndValueXmlType" />
+
+  <xsd:element name="BaseObjectSearchRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="da:AttributeType" minOccurs="0"  
+                     maxOccurs="unbounded" />
+        <!-- FIXME -->
+        <xsd:element ref="ad:controls"
+                     minOccurs="0" maxOccurs="1" />
+	<!-- EMD -->
+      </xsd:sequence>
+      <xsd:attribute name="Dialect" type="xsd:anyURI" />
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="BaseObjectSearchResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="PartialAttribute"  
+                     type="da:PartialAttributeXmlType"
+                     minOccurs="1" maxOccurs="unbounded" />
+        <!-- FIXME -->
+        <xsd:element ref="ad:controls"
+                     minOccurs="0" maxOccurs="1" />
+	<!-- EMD -->
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="AddRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="da:AttributeTypeAndValue"
+                     minOccurs="0" maxOccurs="unbounded" />
+        <!-- FIXME -->
+        <xsd:element ref="ad:controls"
+                     minOccurs="0" maxOccurs="1" />
+	<!-- EMD -->
+      </xsd:sequence>
+      <xsd:attribute name="Dialect" type="xsd:anyURI" />
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:simpleType name="OperationXmlType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="add" />
+      <xsd:enumeration value="delete" />
+      <xsd:enumeration value="replace" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="Change" >
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="da:AttributeTypeAndValueXmlType">
+          <xsd:attribute name="Operation" type="da:OperationXmlType"
+                         use="required" />
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="ModifyRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="da:Change"
+                     minOccurs="0" maxOccurs="unbounded" />
+        <!-- FIXME -->
+        <xsd:element ref="ad:controls"
+                     minOccurs="0" maxOccurs="1" />
+	<!-- EMD -->
+      </xsd:sequence>
+      <xsd:attribute name="Dialect" type="xsd:anyURI" />
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="IdentityManagementOperation" />
+
+  <xsd:element name="AttributeTypeOrValueAlreadyExists">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="da:AttributeTypeAndValue"
+                     minOccurs="0" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="AttributeTypeNotValidForDialect">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="da:AttributeType"
+                     minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="AttributeTypeNotValidForEntry">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="da:AttributeType"
+                     minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <!-- FIXME added -->
+  <xsd:complexType name="AddResponseType" >
+     <xsd:sequence>
+       <xsd:element ref="wxf:ResourceCreated" />
+       <xsd:element ref="ad:controls" minOccurs="0" maxOccurs="1" />
+     </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

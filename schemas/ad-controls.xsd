@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/2008/1/ActiveDirectory"
+   xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+  
+  <!--[MS-WSPELD] extension elements]-->
+ 
+  <xsd:element name="controlValue" type="xsd:base64Binary" />
+ 
+  <xsd:element name="control">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ad:controlValue"
+                     minOccurs="0" maxOccurs="1" />
+      </xsd:sequence>
+      <xsd:attribute name="type" use="required" type= "xsd:string" />
+      <xsd:attribute name="criticality" use="required" type= "xsd:boolean" />
+    </xsd:complexType>
+  </xsd:element>
+ 
+  <xsd:element name="controls">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ad:control" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

@@ -1,0 +1,41 @@
+ <xsd:schema xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
+             attributeFormDefault="unqualified" 
+             elementFormDefault="qualified" 
+             targetNamespace="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+
+   <xsd:element name ="Selection"> 
+     <xsd:complexType> 
+       <xsd:sequence> 
+         <xsd:element name="SelectionProperty" type="xsd:string" minOccurs="1" 
+                      maxOccurs ="unbounded"  /> 
+       </xsd:sequence> 
+       <xsd:attribute name="Dialect" 
+                      
+fixed="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/XPath-Level-1" 
+use="required"/> 
+     </xsd:complexType> 
+   </xsd:element> 
+  
+   <xsd:element name ="Sorting"> 
+     <xsd:complexType> 
+       <xsd:sequence> 
+         <xsd:element name="SortingProperty" minOccurs="1" 
+                      maxOccurs ="1"> 
+           <xsd:complexType> 
+             <xsd:simpleContent> 
+               <xsd:extension base="xsd:string"> 
+                 <xsd:attribute name="Ascending" use="optional" 
+                                type="xsd:boolean" default="true"/> 
+               </xsd:extension> 
+             </xsd:simpleContent> 
+           </xsd:complexType> 
+         </xsd:element> 
+       </xsd:sequence> 
+       <xsd:attribute name="Dialect" 
+                      
+fixed="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/XPath-Level-1" 
+use="required"/> 
+     </xsd:complexType> 
+   </xsd:element> 
+ </xsd:schema>

@@ -1,0 +1,70 @@
+<xsd:schema 
+     targetNamespace="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+     xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
+     xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess" 
+     elementFormDefault="qualified"> 
+
+   <xsd:complexType name="ArgumentErrorType"> 
+     <xsd:sequence> 
+       <xsd:element name="Message" type="xsd:string" minOccurs="0"/> 
+       <xsd:element name="ParameterName" type="xsd:string" 
+                    minOccurs="0"/> 
+       <xsd:element name="ShortMessage" type="xsd:string" 
+                    minOccurs="0"/> 
+     </xsd:sequence> 
+   </xsd:complexType> 
+  
+   <xsd:complexType name="DirectoryErrorType"> 
+     <xsd:sequence> 
+       <xsd:element name="Message" type="xsd:string" minOccurs="0"/> 
+       <xsd:element name="ErrorCode" type="xsd:string" minOccurs="0"/> 
+       <xsd:element name="ExtendedErrorMessage" type="xsd:string" 
+                    minOccurs="0"/> 
+       <xsd:element name="MatchedDN" type="xsd:string" minOccurs="0"/> 
+       <xsd:element name="Referral" type="xsd:string" minOccurs="0" 
+                    maxOccurs="unbounded"/> 
+       <xsd:element name="Win32ErrorCode" type="xsd:string" minOccurs="0"/> 
+       <xsd:element name="ShortMessage" type="xsd:string" minOccurs="0"/> 
+     </xsd:sequence> 
+   </xsd:complexType> 
+  
+   <xsd:complexType name="ChangeType"> 
+     <xsd:sequence> 
+       <!-- FIXME
+       <xsd:element name="AttributeType" type="da:AttributeType"/> 
+       <xsd:element name="AttributeValue" type="da:AttributeValue"/> 
+       -->
+       <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+
+     </xsd:sequence> 
+     <xsd:attribute name="Operation" type="xsd:string"/> 
+   </xsd:complexType> 
+  
+   <xsd:complexType name="InvalidAttributeTypeOrValueType"> 
+     <xsd:sequence> 
+       <!-- FIXME
+       <xsd:element name="AttributeType" type="da:AttributeType"/> 
+       <xsd:element name="AttributeValue" type="da:AttributeValue"/> 
+       -->
+       <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+     </xsd:sequence> 
+   </xsd:complexType> 
+  
+   <xsd:complexType name="FaultDetailType"> 
+     <xsd:sequence> 
+       <xsd:element name="Error" type="xsd:string" minOccurs="0"/> 
+       <xsd:choice> 
+         <xsd:element name="ArgumentError" type="ad:ArgumentErrorType"/> 
+         <xsd:element name="DirectoryError" type="ad:DirectoryErrorType"/> 
+         <xsd:element name="InvalidAttributeType" type="xsd:string"/> 
+         <xsd:element name="InvalidOperation" type="xsd:string"/> 
+<xsd:element name="InvalidChange" type="ad:ChangeType"/> 
+<xsd:element name="InvalidAttributeTypeOrValue" 
+type="ad:InvalidAttributeTypeOrValueType"/> 
+</xsd:choice> 
+<xsd:element name="ShortError" type="xsd:string" minOccurs="0"/> 
+</xsd:sequence> 
+</xsd:complexType> 
+<xsd:element name="FaultDetail" type="ad:FaultDetailType"/> 
+</xsd:schema>
