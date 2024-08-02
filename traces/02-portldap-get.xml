@@ -1,0 +1,18 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">
+<s:Header>
+<a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action>
+<ad:instance>ldap:389</ad:instance>
+<ad:objectReferenceProperty>11111111-1111-1111-1111-111111111111</ad:objectReferenceProperty>
+<da:IdentityManagementOperation s:mustUnderstand="1" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"></da:IdentityManagementOperation>
+<a:MessageID>urn:uuid:0e4a2ab6-6077-49da-914c-206e1d92ef5f</a:MessageID>
+<a:ReplyTo>
+<a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+</a:ReplyTo>
+<a:To s:mustUnderstand="1">net.tcp://win2016.ad.garming.example.com:9389/ActiveDirectoryWebServices/Windows/Resource</a:To>
+</s:Header>
+<s:Body>
+<da:BaseObjectSearchRequest Dialect="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/XPath-Level-1">
+<da:AttributeType>addata:msDS-PortLDAP</da:AttributeType>
+</da:BaseObjectSearchRequest>
+</s:Body>
+</s:Envelope>

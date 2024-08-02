@@ -1,0 +1,157 @@
+<s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+<s:Header>
+<a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</a:Action>
+<a:RelatesTo>urn:uuid:f5986bbd-4bf3-49c2-9221-4dd6b1d62dbe</a:RelatesTo>
+</s:Header>
+<s:Body>
+<addata:top xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ad:objectReferenceProperty>
+<ad:value xsi:type="xsd:string">11111111-1111-1111-1111-111111111111</ad:value>
+</ad:objectReferenceProperty>
+<addata:supportedCapabilities LdapSyntax="ObjectIdentifier">
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.800</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1670</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1791</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1935</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2080</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2237</ad:value>
+</addata:supportedCapabilities>
+<addata:supportedLDAPPolicies LdapSyntax="UnicodeString">
+<ad:value xsi:type="xsd:string">MaxPoolThreads</ad:value>
+<ad:value xsi:type="xsd:string">MaxPercentDirSyncRequests</ad:value>
+<ad:value xsi:type="xsd:string">MaxDatagramRecv</ad:value>
+<ad:value xsi:type="xsd:string">MaxReceiveBuffer</ad:value>
+<ad:value xsi:type="xsd:string">InitRecvTimeout</ad:value>
+<ad:value xsi:type="xsd:string">MaxConnections</ad:value>
+<ad:value xsi:type="xsd:string">MaxConnIdleTime</ad:value>
+<ad:value xsi:type="xsd:string">MaxPageSize</ad:value>
+<ad:value xsi:type="xsd:string">MaxBatchReturnMessages</ad:value>
+<ad:value xsi:type="xsd:string">MaxQueryDuration</ad:value>
+<ad:value xsi:type="xsd:string">MaxDirSyncDuration</ad:value>
+<ad:value xsi:type="xsd:string">MaxTempTableSize</ad:value>
+<ad:value xsi:type="xsd:string">MaxResultSetSize</ad:value>
+<ad:value xsi:type="xsd:string">MinResultSets</ad:value>
+<ad:value xsi:type="xsd:string">MaxResultSetsPerConn</ad:value>
+<ad:value xsi:type="xsd:string">MaxNotificationPerConn</ad:value>
+<ad:value xsi:type="xsd:string">MaxValRange</ad:value>
+<ad:value xsi:type="xsd:string">MaxValRangeTransitive</ad:value>
+<ad:value xsi:type="xsd:string">ThreadMemoryLimit</ad:value>
+<ad:value xsi:type="xsd:string">SystemMemoryLimitPercent</ad:value>
+</addata:supportedLDAPPolicies>
+<addata:highestCommittedUSN LdapSyntax="LargeInteger">
+<ad:value xsi:type="xsd:string">12786</ad:value>
+</addata:highestCommittedUSN>
+<addata:namingContexts LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">DC=ad,DC=garming,DC=example,DC=com</ad:value>
+<ad:value xsi:type="xsd:string">CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+<ad:value xsi:type="xsd:string">CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+<ad:value xsi:type="xsd:string">DC=DomainDnsZones,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+<ad:value xsi:type="xsd:string">DC=ForestDnsZones,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:namingContexts>
+<addata:subschemaSubentry LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">CN=Aggregate,CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:subschemaSubentry>
+<addata:dnsHostName LdapSyntax="UnicodeString">
+<ad:value xsi:type="xsd:string">win2016.ad.garming.example.com</ad:value>
+</addata:dnsHostName>
+<addata:configurationNamingContext LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:configurationNamingContext>
+<addata:forestFunctionality LdapSyntax="Integer">
+<ad:value xsi:type="xsd:string">7</ad:value>
+</addata:forestFunctionality>
+<addata:isSynchronized LdapSyntax="Boolean">
+<ad:value xsi:type="xsd:string">TRUE</ad:value>
+</addata:isSynchronized>
+<addata:ldapServiceName LdapSyntax="UnicodeString">
+<ad:value xsi:type="xsd:string">ad.garming.example.com:win2016$@AD.GARMING.EXAMPLE.COM</ad:value>
+</addata:ldapServiceName>
+<addata:domainControllerFunctionality LdapSyntax="Integer">
+<ad:value xsi:type="xsd:string">7</ad:value>
+</addata:domainControllerFunctionality>
+<addata:dsServiceName LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:dsServiceName>
+<addata:supportedSASLMechanisms LdapSyntax="UnicodeString">
+<ad:value xsi:type="xsd:string">GSSAPI</ad:value>
+<ad:value xsi:type="xsd:string">GSS-SPNEGO</ad:value>
+<ad:value xsi:type="xsd:string">EXTERNAL</ad:value>
+<ad:value xsi:type="xsd:string">DIGEST-MD5</ad:value>
+</addata:supportedSASLMechanisms>
+<addata:supportedLDAPVersion LdapSyntax="Integer">
+<ad:value xsi:type="xsd:string">3</ad:value>
+<ad:value xsi:type="xsd:string">2</ad:value>
+</addata:supportedLDAPVersion>
+<addata:defaultNamingContext LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:defaultNamingContext>
+<addata:currentTime LdapSyntax="GeneralizedTimeString">
+<ad:value xsi:type="xsd:string">20240315050442.0Z</ad:value>
+</addata:currentTime>
+<addata:supportedControl LdapSyntax="ObjectIdentifier">
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.319</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.801</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.473</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.528</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.417</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.619</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.841</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.529</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.805</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.521</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.970</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1338</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.474</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1339</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1340</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1413</ad:value>
+<ad:value xsi:type="xsd:string">2.16.840.1.113730.3.4.9</ad:value>
+<ad:value xsi:type="xsd:string">2.16.840.1.113730.3.4.10</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1504</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1852</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.802</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1907</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1948</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1974</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.1341</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2026</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2064</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2065</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2066</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2090</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2205</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2204</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2206</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2211</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2239</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2255</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2256</ad:value>
+<ad:value xsi:type="xsd:string">1.2.840.113556.1.4.2309</ad:value>
+</addata:supportedControl>
+<addata:serverName LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:serverName>
+<addata:schemaNamingContext LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:schemaNamingContext>
+<addata:isGlobalCatalogReady LdapSyntax="Boolean">
+<ad:value xsi:type="xsd:string">TRUE</ad:value>
+</addata:isGlobalCatalogReady>
+<addata:domainFunctionality LdapSyntax="Integer">
+<ad:value xsi:type="xsd:string">7</ad:value>
+</addata:domainFunctionality>
+<addata:rootDomainNamingContext LdapSyntax="DSDNString">
+<ad:value xsi:type="xsd:string">DC=ad,DC=garming,DC=example,DC=com</ad:value>
+</addata:rootDomainNamingContext>
+<ad:container-hierarchy-parent>
+<ad:value xsi:type="xsd:string">11111111-1111-1111-1111-111111111111</ad:value>
+</ad:container-hierarchy-parent>
+<ad:relativeDistinguishedName>
+<ad:value xsi:type="xsd:string"></ad:value>
+</ad:relativeDistinguishedName>
+<ad:distinguishedName>
+<ad:value xsi:type="xsd:string"></ad:value>
+</ad:distinguishedName>
+</addata:top>
+</s:Body>
+</s:Envelope>

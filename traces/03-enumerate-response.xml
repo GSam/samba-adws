@@ -1,0 +1,12 @@
+<s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+<s:Header>
+<a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse</a:Action>
+<a:RelatesTo>urn:uuid:51bda933-4fe3-4df8-9bf3-f55d936187de</a:RelatesTo>
+</s:Header>
+<s:Body>
+<wsen:EnumerateResponse xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+<wsen:Expires>2024-03-15T05:34:42.6778076Z</wsen:Expires>
+<wsen:EnumerationContext>e78af0c4-8a5d-4691-ae89-40d71ea9289f</wsen:EnumerationContext>
+</wsen:EnumerateResponse>
+</s:Body>
+</s:Envelope>

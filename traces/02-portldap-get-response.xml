@@ -1,0 +1,15 @@
+<s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+<s:Header>
+<a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</a:Action>
+<a:RelatesTo>urn:uuid:0e4a2ab6-6077-49da-914c-206e1d92ef5f</a:RelatesTo>
+</s:Header>
+<s:Body>
+<da:BaseObjectSearchResponse xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">
+<da:PartialAttribute xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">
+<addata:msDS-PortLDAP LdapSyntax="Integer">
+<ad:value xsi:type="xsd:string">389</ad:value>
+</addata:msDS-PortLDAP>
+</da:PartialAttribute>
+</da:BaseObjectSearchResponse>
+</s:Body>
+</s:Envelope>
