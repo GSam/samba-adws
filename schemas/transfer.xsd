@@ -26,14 +26,23 @@ No other rights are granted by implication, estoppel or otherwise.
   elementFormDefault="qualified"
   blockDefault="#all" >
  
+  <!--  XXX Avoid external references
   <xs:import
     namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"
     schemaLocation="http/schemas.xmlsoap.org/ws/2004/08/addressing/addressing.xsd" />
- 
+
   <xs:import
     namespace="http://www.w3.org/2005/08/addressing"
     schemaLocation="http/www.w3.org/2006/03/addressing/ws-addr.xsd" />
- 
+  -->
+  <xs:import
+    namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+    />
+
+  <xs:import
+    namespace="http://www.w3.org/2005/08/addressing"
+    />
+
   <xs:complexType name="AnyXmlType" >
     <xs:sequence>
       <xs:any namespace="##other" processContents="lax" />
