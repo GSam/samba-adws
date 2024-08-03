@@ -31,7 +31,7 @@
   
    <xsd:complexType name="ChangeType"> 
      <xsd:sequence> 
-       <!-- FIXME
+       <!-- FIXME Reference to da fails
        <xsd:element name="AttributeType" type="da:AttributeType"/> 
        <xsd:element name="AttributeValue" type="da:AttributeValue"/> 
        -->
@@ -43,7 +43,7 @@
   
    <xsd:complexType name="InvalidAttributeTypeOrValueType"> 
      <xsd:sequence> 
-       <!-- FIXME
+       <!-- FIXME Reference to da fails
        <xsd:element name="AttributeType" type="da:AttributeType"/> 
        <xsd:element name="AttributeValue" type="da:AttributeValue"/> 
        -->
@@ -59,12 +59,11 @@
          <xsd:element name="DirectoryError" type="ad:DirectoryErrorType"/> 
          <xsd:element name="InvalidAttributeType" type="xsd:string"/> 
          <xsd:element name="InvalidOperation" type="xsd:string"/> 
-<xsd:element name="InvalidChange" type="ad:ChangeType"/> 
-<xsd:element name="InvalidAttributeTypeOrValue" 
-type="ad:InvalidAttributeTypeOrValueType"/> 
-</xsd:choice> 
-<xsd:element name="ShortError" type="xsd:string" minOccurs="0"/> 
-</xsd:sequence> 
-</xsd:complexType> 
-<xsd:element name="FaultDetail" type="ad:FaultDetailType"/> 
+         <xsd:element name="InvalidChange" type="ad:ChangeType"/> 
+         <xsd:element name="InvalidAttributeTypeOrValue" type="ad:InvalidAttributeTypeOrValueType"/> 
+       </xsd:choice> 
+       <xsd:element name="ShortError" type="xsd:string" minOccurs="0"/> 
+     </xsd:sequence> 
+   </xsd:complexType> 
+   <xsd:element name="FaultDetail" type="ad:FaultDetailType"/> 
 </xsd:schema>

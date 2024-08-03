@@ -5,6 +5,7 @@
      xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess" 
      elementFormDefault="qualified"> 
 
+<!-- XXX No reference found for these -->
 <xsd:element type="xsd:string" name="instance"/>
 <xsd:element name="objectReferenceProperty">
 <xsd:complexType mixed="true">

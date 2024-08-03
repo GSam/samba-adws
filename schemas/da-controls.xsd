@@ -55,10 +55,10 @@
       <xsd:sequence>
         <xsd:element ref="da:AttributeType" minOccurs="0"  
                      maxOccurs="unbounded" />
-        <!-- FIXME -->
+        <!-- XXX Add controls -->
         <xsd:element ref="ad:controls"
                      minOccurs="0" maxOccurs="1" />
-	<!-- EMD -->
+	<!-- END -->
       </xsd:sequence>
       <xsd:attribute name="Dialect" type="xsd:anyURI" />
     </xsd:complexType>
@@ -70,10 +70,10 @@
         <xsd:element name="PartialAttribute"  
                      type="da:PartialAttributeXmlType"
                      minOccurs="1" maxOccurs="unbounded" />
-        <!-- FIXME -->
+        <!-- XXX Add controls -->
         <xsd:element ref="ad:controls"
                      minOccurs="0" maxOccurs="1" />
-	<!-- EMD -->
+	<!-- END -->
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
@@ -83,10 +83,10 @@
       <xsd:sequence>
         <xsd:element ref="da:AttributeTypeAndValue"
                      minOccurs="0" maxOccurs="unbounded" />
-        <!-- FIXME -->
+        <!-- XXX Add controls -->
         <xsd:element ref="ad:controls"
                      minOccurs="0" maxOccurs="1" />
-	<!-- EMD -->
+	<!-- END -->
       </xsd:sequence>
       <xsd:attribute name="Dialect" type="xsd:anyURI" />
     </xsd:complexType>
@@ -116,10 +116,10 @@
       <xsd:sequence>
         <xsd:element ref="da:Change"
                      minOccurs="0" maxOccurs="unbounded" />
-        <!-- FIXME -->
+        <!-- XXX Add controls -->
         <xsd:element ref="ad:controls"
                      minOccurs="0" maxOccurs="1" />
-	<!-- EMD -->
+	<!-- END -->
       </xsd:sequence>
       <xsd:attribute name="Dialect" type="xsd:anyURI" />
     </xsd:complexType>
@@ -154,7 +154,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <!-- FIXME added -->
+  <!-- XXX added for MS-WSPELD -->
   <xsd:complexType name="AddResponseType" >
      <xsd:sequence>
        <xsd:element ref="wxf:ResourceCreated" />
