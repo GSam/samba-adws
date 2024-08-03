@@ -74,6 +74,7 @@ class GSSAPIStream:
 from samba.param import LoadParm
 from samba.credentials import Credentials
 from samba import gensec, auth
+from samba import NTSTATUSError
 
 class GENSECStream:
     def __init__(self, stream): #, server_name,
@@ -116,15 +117,19 @@ class GENSECStream:
         server_finished = False
         while not server_finished:
             log.debug('Doing step')
-            server_finished, server_to_client = self.client_ctx.update(token)
 
-            self._inner.write(server_to_client)
+            try:
+                server_finished, server_to_client = self.client_ctx.update(token)
+            except NTSTATUSError as e:
+                self._inner.write_error(e)
+                break
 
-            if not server_finished:
-                token = self._inner.read()
-            else:
-                log.debug('GSSAPI Handshake done')
+            if server_finished:
                 self._inner.write_handshake_done(server_to_client)
+            else:
+                self._inner.write(server_to_client)
+
+                token = self._inner.read()
 
         # while not self.client_ctx.complete:
         #     log.debug('Doing step')
