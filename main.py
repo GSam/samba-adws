@@ -176,6 +176,7 @@ class NETTCPProxy(SocketServer.BaseRequestHandler):
                         './/ad:SelectionProperty', as_text=True)
 
                     EnumerationContext = str(uuid.uuid1())
+                    enumeration_context['UUID'] = EnumerationContext
                     EnumerationContext_Dict[EnumerationContext] = enumeration_context
 
                     context['EnumerationContext'] = EnumerationContext

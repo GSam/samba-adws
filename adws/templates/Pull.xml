@@ -12,6 +12,9 @@
                 xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" 
                 xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" 
                 xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+                {% if not is_end %}
+	        <wsen:EnumerationContext>{{EnumerationContext['UUID']}}</wsen:EnumerationContext>
+                {% endif %}
                 <wsen:Items>
                     {% for object in objects %}
                     <addata:computer>
