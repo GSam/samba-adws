@@ -88,5 +88,14 @@ class NegotiateStream:
                             ).to_bytes()
         self._inner.write(handshake + data)
 
+    def write_error(self, e):
+        handshake = HandshakeError(
+                                major=1,
+                                minor=0,
+                                payload_size=8
+                            ).to_bytes()
+        self._inner.write(handshake + struct.pack('>Q', 0x8009030C))
+
+
     def close(self):
         self._inner.close()
