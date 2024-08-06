@@ -1,0 +1,46 @@
+MS-WSDS: WS-Enumeration extensions
+MS-WSTIM: WS-Transfer extensions
+MS-WSPELD: Extensions for controls
+MS-ADDM: ADWS Data Model and common elements
+
+da[-controls].xsd:
+  Base: MS-WSTIM Appendix A: Full WSDL
+  Edited: MS-WSPELD Appendix B: Schema - 7.2 Identity Management Operations for Directory Access [WSTIM] Extended XML Schema
+
+ad.xsd:
+  Base: MS-WSDS Appendix B: Schema
+
+adlq.xsd:
+  Base: MS-WSDS Appendix B: Schema
+
+ad-controls.xsd:
+  Base: MS-WSPELD Appendix B: Schema
+
+ad-fault.xsd:
+  Base: MS-ADDM: 2.6 Common SOAP Fault Detail
+
+ad-adhoc.xsd:
+  No source documentation
+
+addata.xsd:
+  No source documentation
+
+enumeration.xsd:
+  Base: Original standard - Fetched with remote-schemas.py
+  Edited: MS-WSPELD Appendix B: Schema - 7.1 WS-Enumeration [WSENUM] Extended XML Schema
+
+soap-envelope.xsd:
+  Base: Original standard - Fetched with remote-schemas.py
+  Edited: Modified to validate schema
+
+addressing.xsd:
+  Base: Original standard - Fetched with remote-schemas.py
+
+ws-addr.xsd:
+  Base: Original standard - Fetched with remote-schemas.py
+
+transfer.xsd:
+  Base: Original standard - Fetched with remote-schemas.py
+
+Unimplemented extensions:
+- MS-ADDM 2.7 Range retrieval
