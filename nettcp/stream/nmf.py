@@ -5,14 +5,15 @@ from ..nmf import (PreambleEndRecord, ViaRecord, VersionRecord,
                    ModeRecord, KnownEncodingRecord, UpgradeRequestRecord,
                    UpgradeResponseRecord, Record, register_types,
                    SizedEnvelopedMessageRecord, PreambleAckRecord, EndRecord)
-from .gssapi import GSSAPIStream
+from .gensec import GENSECStream
 
 
 class NMFStream:
-    def __init__(self, stream, url, server_name=None):
+    def __init__(self, stream, url, server_name=None, creds=None):
         self._inner = stream
         self._server_name = server_name
         self.url = url
+        self.creds = creds
 
         register_types()
 
@@ -34,7 +35,9 @@ class NMFStream:
             if d != UpgradeResponseRecord().to_bytes():
                 raise IOError('Negotiate not supported')
 
-            self._inner = GSSAPIStream(self._inner, self._server_name)
+            self._inner = GENSECStream(self._inner,
+                                       self._server_name,
+                                       self.creds)
 
         self._inner.write(PreambleEndRecord().to_bytes())
 
