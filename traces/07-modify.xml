@@ -1,0 +1,35 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">
+<s:Header>
+<a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action>
+<ad:instance>ldap:389</ad:instance>
+<ad:objectReferenceProperty>CN=testuser,DC=ad,DC=garming,DC=example,DC=com</ad:objectReferenceProperty>
+<da:IdentityManagementOperation s:mustUnderstand="1" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"></da:IdentityManagementOperation>
+<a:MessageID>urn:uuid:07ef164f-b9dc-45bd-bbd2-d068abca0409</a:MessageID>
+<a:ReplyTo>
+<a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+</a:ReplyTo>
+<a:To s:mustUnderstand="1">net.tcp://win2016.ad.garming.example.com:9389/ActiveDirectoryWebServices/Windows/Resource</a:To>
+</s:Header>
+<s:Body>
+<da:ModifyRequest Dialect="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/XPath-Level-1">
+<da:Change Operation="replace">
+<da:AttributeType>addata:mail</da:AttributeType>
+<da:AttributeValue>
+<ad:value xsi:type="xsd:string">glenjohn@fabrikam.com</ad:value>
+</da:AttributeValue>
+</da:Change>
+<da:Change Operation="replace">
+<da:AttributeType>addata:title</da:AttributeType>
+<da:AttributeValue>
+<ad:value xsi:type="xsd:string">director</ad:value>
+</da:AttributeValue>
+</da:Change>
+<ad:controls>
+<ad:control type="1.2.840.113556.1.4.1413" criticality="true"></ad:control>
+<ad:control type="1.2.840.113556.1.4.801" criticality="true">
+<ad:controlValue xsi:type="xsd:base64Binary">MIQAAAADAgEE</ad:controlValue>
+</ad:control>
+</ad:controls>
+</da:ModifyRequest>
+</s:Body>
+</s:Envelope>

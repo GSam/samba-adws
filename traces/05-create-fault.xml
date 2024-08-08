@@ -1,0 +1,34 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+<s:Header>
+<a:Action s:mustUnderstand="1">http://schemas.dmtf.org/wbem/wsman/1/wsman/fault</a:Action>
+<a:RelatesTo>urn:uuid:1ef56ef1-71fc-44bf-a8ac-e38e90fe4a43</a:RelatesTo>
+<a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+</s:Header>
+<s:Body>
+<s:Fault>
+<s:Code>
+<s:Value>s:Sender</s:Value>
+<s:Subcode>
+<s:Value xmlns:a="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">a:AlreadyExists</s:Value>
+</s:Subcode>
+</s:Code>
+<s:Reason>
+<s:Text xml:lang="en-US">The supplied entry already exists.</s:Text>
+</s:Reason>
+<s:Detail>
+<FaultDetail xmlns="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<DirectoryError>
+<Message>The object exists.</Message>
+<ErrorCode>68</ErrorCode>
+<ExtendedErrorMessage>00002071: UpdErr: DSID-030503C8, problem 6005 (ENTRY_EXISTS), data 0
+</ExtendedErrorMessage>
+<MatchedDN></MatchedDN>
+<Win32ErrorCode>5010</Win32ErrorCode>
+<ShortMessage>EDirectoryOperation</ShortMessage>
+</DirectoryError>
+<ShortError>EArgument</ShortError>
+</FaultDetail>
+</s:Detail>
+</s:Fault>
+</s:Body>
+</s:Envelope>

@@ -1,0 +1,16 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+<s:Header>
+<a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/CreateResponse</a:Action>
+<a:RelatesTo>urn:uuid:10faa255-55db-43a7-951b-bb1f2d20d3bd</a:RelatesTo>
+<a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+</s:Header>
+<s:Body>
+<wst:ResourceCreated xmlns:wst="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory">
+<wsa:Address>net.tcp://win2016.ad.garming.example.com:9389/ActiveDirectoryWebServices/Windows/Resource</wsa:Address>
+<wsa:ReferenceParameters>
+<ad:objectReferenceProperty>dba0a0b1-6a75-48d7-8912-cc8a539a13e5</ad:objectReferenceProperty>
+<ad:instance>ldap:389</ad:instance>
+</wsa:ReferenceParameters>
+</wst:ResourceCreated>
+</s:Body>
+</s:Envelope>
