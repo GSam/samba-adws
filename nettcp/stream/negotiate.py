@@ -79,3 +79,6 @@ class NegotiateStream:
         else:
             payload_size = struct.unpack('<I', self._inner.read(4))[0]
             return self._inner.read(payload_size)
+
+    def close(self):
+        self._inner.close()
