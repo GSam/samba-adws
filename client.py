@@ -227,6 +227,15 @@ class Get(Transfer):
         }
 
 
+class SimpleGet(Get):
+
+    def __init__(self, iden, schema, service_map):
+        super(SimpleGet, self).__init__(iden, schema, service_map)
+
+        self.xml['s:Body'] = None
+        del self.xml['s:Header']["da:IdentityManagementOperation"]
+
+
 class Create(Transfer):
 
     def __init__(self, target, object_class, schema, service_map):
