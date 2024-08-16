@@ -15,7 +15,7 @@ log = logging.getLogger(__name__ + '.GENSECStream')
 
 
 class GENSECStream:
-    def __init__(self, stream, server_name, creds):
+    def __init__(self, stream, server_name=None, creds=None):
         self._inner = NegotiateStream(stream)
         self.client_ctx = None
         self._readcache = b''
@@ -25,7 +25,10 @@ class GENSECStream:
         self.settings["lp_ctx"] = self.lp_ctx = LoadParm()
         self.lp_ctx.load_default()
 
-        self.settings["target_hostname"] = server_name
+        if server_name:
+            self.settings["target_hostname"] = server_name
+        else:
+            self.settings["target_hostname"] = self.lp_ctx.get("netbios name")
 
         self.server_name = server_name
         self.creds = creds
