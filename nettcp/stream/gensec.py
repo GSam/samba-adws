@@ -30,6 +30,36 @@ class GENSECStream:
         self.server_name = server_name
         self.creds = creds
 
+    def negotiate_server(self):
+        token = self._inner.read()
+
+        self.client_ctx = gensec.Security.start_server(settings=self.settings,
+                auth_context=auth.AuthContext(lp_ctx=self.lp_ctx))
+
+        creds = Credentials()
+        creds.guess(self.lp_ctx)
+        creds.set_machine_account(self.lp_ctx)
+        self.client_ctx.set_credentials(creds)
+
+        self.client_ctx.start_mech_by_name("spnego")
+
+        server_finished = False
+        while not server_finished:
+            log.debug('Doing step')
+
+            try:
+                server_finished, server_to_client = self.client_ctx.update(token)
+            except NTSTATUSError as e:
+                self._inner.write_error(e)
+                break
+
+            if server_finished:
+                self._inner.write_handshake_done(server_to_client)
+            else:
+                self._inner.write(server_to_client)
+
+                token = self._inner.read()
+
     def negotiate(self):
         self.client_ctx = gensec.Security.start_client(settings=self.settings)
 
