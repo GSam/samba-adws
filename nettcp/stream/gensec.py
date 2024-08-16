@@ -28,6 +28,7 @@ class GENSECStream:
         if server_name:
             self.settings["target_hostname"] = server_name
         else:
+            # Acting as the server
             self.settings["target_hostname"] = self.lp_ctx.get("netbios name")
 
         self.server_name = server_name
