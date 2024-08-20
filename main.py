@@ -81,10 +81,49 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                 out = StringIO()
                 print_records(records, fp=out)
                 xml = out.getvalue()
+                print(xml)
 
-                # FIXME xmlutils.print_xml(xml, request_index, mode='w+')
+                import xmlschema
+                xs = xmlschema.XMLSchema('schemas/soap-envelope.xsd', build=False)
+
+                _ = xs.add_schema(open('schemas/ws-addr.xsd'))
+                _ = xs.add_schema(open('schemas/addressing.xsd'))
+
+                _ = xs.add_schema(open('schemas/transfer.xsd'))
+                _ = xs.add_schema(open('schemas/enumeration.xsd'))
+
+                _ = xs.add_schema(open('schemas/adlq.xsd'))
+                _ = xs.add_schema(open('schemas/ad.xsd'))
+                _ = xs.add_schema(open('schemas/ad-adhoc.xsd'))
+                _ = xs.add_schema(open('schemas/da-controls.xsd'))
+                _ = xs.add_schema(open('schemas/addata.xsd'))
+
+                _ = xs.add_schema(open('schemas/ad-fault.xsd'))
+                _ = xs.add_schema(open('schemas/ad-controls.xsd'))
+
+                xs.build()
+
+                decoded = xs.to_dict(xml)
+
+                import server
+
+                from samba.samdb import SamDB
+                from samba.param import LoadParm
+                from samba.auth import system_session
+                lp = LoadParm()
+                lp.load_default()
+                samdb = SamDB(lp=lp, session_info=system_session())
 
                 ack_xml = None
+                if decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Get':
+                    if 'da:IdentityManagementOperation' in decoded['s:Header']:
+                        command = server.BaseGet(decoded, xs, samdb)
+                    else:
+                        command = server.Get(decoded, xs, samdb)
+                    command.validate()
+                    ack_xml = command.build_response()
+
+                    print(ack_xml)
 
                 assert ack_xml, 'I do not know how to answer'
 
