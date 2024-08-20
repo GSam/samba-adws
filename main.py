@@ -25,6 +25,26 @@ from wcf.records import dump_records
 #from adws import xmlutils
 
 
+import xmlschema
+xs = xmlschema.XMLSchema('schemas/soap-envelope.xsd', build=False)
+
+_ = xs.add_schema(open('schemas/ws-addr.xsd'))
+_ = xs.add_schema(open('schemas/addressing.xsd'))
+
+_ = xs.add_schema(open('schemas/transfer.xsd'))
+_ = xs.add_schema(open('schemas/enumeration.xsd'))
+
+_ = xs.add_schema(open('schemas/adlq.xsd'))
+_ = xs.add_schema(open('schemas/ad.xsd'))
+_ = xs.add_schema(open('schemas/ad-adhoc.xsd'))
+_ = xs.add_schema(open('schemas/da-controls.xsd'))
+_ = xs.add_schema(open('schemas/addata.xsd'))
+
+_ = xs.add_schema(open('schemas/ad-fault.xsd'))
+_ = xs.add_schema(open('schemas/ad-controls.xsd'))
+
+xs.build()
+
 def print_data(msg, data):
     if log.isEnabledFor(logging.DEBUG):
         print(msg, file=sys.stderr)
@@ -82,26 +102,6 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                 print_records(records, fp=out)
                 xml = out.getvalue()
                 print(xml)
-
-                import xmlschema
-                xs = xmlschema.XMLSchema('schemas/soap-envelope.xsd', build=False)
-
-                _ = xs.add_schema(open('schemas/ws-addr.xsd'))
-                _ = xs.add_schema(open('schemas/addressing.xsd'))
-
-                _ = xs.add_schema(open('schemas/transfer.xsd'))
-                _ = xs.add_schema(open('schemas/enumeration.xsd'))
-
-                _ = xs.add_schema(open('schemas/adlq.xsd'))
-                _ = xs.add_schema(open('schemas/ad.xsd'))
-                _ = xs.add_schema(open('schemas/ad-adhoc.xsd'))
-                _ = xs.add_schema(open('schemas/da-controls.xsd'))
-                _ = xs.add_schema(open('schemas/addata.xsd'))
-
-                _ = xs.add_schema(open('schemas/ad-fault.xsd'))
-                _ = xs.add_schema(open('schemas/ad-controls.xsd'))
-
-                xs.build()
 
                 decoded = xs.to_dict(xml)
 
