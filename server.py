@@ -1,5 +1,8 @@
 import lxml.etree as ET
 from base64 import b64encode
+from samba.ndr import ndr_unpack
+from samba.dcerpc import misc
+from samba import dsdb
 
 class SchemaSyntax(object):
 
@@ -16,14 +19,15 @@ class AbstractFetch(object):
             oid = self.samdb.get_syntax_oid_from_lDAPDisplayName(attr)
         return oid and OID_SCHEMA_SYNTAX_DICT.get(oid) or None
 
-    def build_attr_list(self, msg, is_root_dse=False, attr_names=[]):
+    def build_attr_list(self, msg, is_root_dse=False, attr_names=[], exclude=[]):
         if not attr_names:
             attr_names = list(msg.keys())
-            attr_names.remove('dn')
-            attr_names.remove('vendorName')
 
         attrs = []
         for attr_name in attr_names:
+            if attr_name in exclude:
+                continue
+
             attr_obj = None
             vals = msg.get(attr_name, None)
             if vals is not None:
@@ -89,7 +93,7 @@ class Get(AbstractFetch):
         # ldb.MessageElement
         msg = result[0]
 
-        attrs = self.build_attr_list(msg, is_root_dse=True)
+        attrs = self.build_attr_list(msg, is_root_dse=True, exclude=['dn', 'vendorName'])
 
         attrs.insert(0, SyntheticAttr('objectReferenceProperty', [ROOT_DSE_GUID]))
         # these 3 appear at last
@@ -170,17 +174,49 @@ class BaseGet(AbstractFetch):
             base = ''
             is_root_dse = True
 
-        attr_names = [attr.split(':')[-1] for attr in self.xml['s:Body']['da:BaseObjectSearchRequest'][0]['da:AttributeType']]
-        result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE, attrs=attr_names)
-        # ldb.MessageElement
-        msg = result[0]
+        base_search = self.xml['s:Body']['da:BaseObjectSearchRequest'][0]
+        if 'da:AttributeType' in base_search:
+            attr_names = [attr.split(':')[-1] for attr in ['da:AttributeType']]
+            result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE, attrs=attr_names)
 
-        attrs = self.build_attr_list(msg, is_root_dse=is_root_dse, attr_names=attr_names)
+            # ldb.MessageElement
+            msg = result[0]
 
-        resp_array = self.response['s:Body']['da:BaseObjectSearchResponse'][0]['da:PartialAttribute']
+            attrs = self.build_attr_list(msg, is_root_dse=is_root_dse, attr_names=attr_names)
 
-        for attr in attrs:
-            resp_array.append(attr.to_dict())
+            resp_array = self.response['s:Body']['da:BaseObjectSearchResponse'][0]['da:PartialAttribute']
+
+            for attr in attrs:
+                resp_array.append(attr.to_dict())
+        else:
+            attr_names = []
+            result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE, attrs=['*', 'parentGUID'])
+            msg = result[0]
+
+            attrs = self.build_attr_list(msg, is_root_dse=is_root_dse, attr_names=attr_names,
+                                         exclude=['dn', 'parentGUID'])
+
+            object_guid = str(ndr_unpack(misc.GUID, msg['objectGUID'][0]))
+            if 'parentGUID' in msg:
+                parent_guid = str(ndr_unpack(misc.GUID, msg['parentGUID'][0]))
+
+            dn = str(msg['distinguishedName'][0])
+            oc = str(msg['objectClass'][-1])
+
+            attrs.insert(0, SyntheticAttr('objectReferenceProperty', [object_guid]))
+            # these 3 appear at last
+            if 'parentGUID' in msg:
+                attrs.append(SyntheticAttr('container-hierarchy-parent', [parent_guid]))
+
+            attrs.append(SyntheticAttr('relativeDistinguishedName', [get_rdn(msg['dn'])]))
+            attrs.append(SyntheticAttr('distinguishedName', [dn]))
+
+            resp_dict = {}
+
+            for attr in attrs:
+                resp_dict.update(attr.to_dict())
+            resp_array = self.response['s:Body']['da:BaseObjectSearchResponse'][0]['da:PartialAttribute']
+            resp_array.append({'addata:' + oc: [ resp_dict ] })
 
         output = self.schema.encode(self.response,
                                     path="s:Envelope",
@@ -189,6 +225,12 @@ class BaseGet(AbstractFetch):
 
 import ldb
 
+def get_rdn(dn):
+    rdn_name = dn.get_rdn_name()
+    rdn_value = dn.get_rdn_value()
+    if rdn_name and rdn_value:
+        return '%s=%s' % (rdn_name, rdn_value)
+    return ''
 
 # MS-ADDM 2.3.4 Syntax Mapping
 SCHEMA_SYNTAX_LIST = [
@@ -201,6 +243,7 @@ SCHEMA_SYNTAX_LIST = [
     SchemaSyntax(ldb.SYNTAX_UTC_TIME, 'UTCTimeString'),
     SchemaSyntax(ldb.SYNTAX_GENERALIZED_TIME, 'GeneralizedTimeString'),
     SchemaSyntax(ldb.SYNTAX_OBJECT_IDENTIFIER, 'ObjectIdentifier'),
+    SchemaSyntax(dsdb.DSDB_SYNTAX_BINARY_DN, 'DNBinary'),
 ]
 
 OID_SCHEMA_SYNTAX_DICT = {obj.oid: obj for obj in SCHEMA_SYNTAX_LIST}
