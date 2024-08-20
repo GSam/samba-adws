@@ -176,7 +176,7 @@ class BaseGet(AbstractFetch):
 
         base_search = self.xml['s:Body']['da:BaseObjectSearchRequest'][0]
         if 'da:AttributeType' in base_search:
-            attr_names = [attr.split(':')[-1] for attr in ['da:AttributeType']]
+            attr_names = [attr.split(':')[-1] for attr in base_search['da:AttributeType']]
             result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE, attrs=attr_names)
 
             # ldb.MessageElement
