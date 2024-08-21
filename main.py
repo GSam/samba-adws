@@ -59,9 +59,17 @@ class ADWSServer(SocketServer.BaseRequestHandler):
 
     def handle(self):
         # this func is called in __init__ of base class
+
+        from samba.samdb import SamDB
+        from samba.param import LoadParm
+        from samba.auth import system_session
+        lp = LoadParm()
+        lp.load_default()
+        samdb = SamDB(lp=lp, session_info=system_session())
+
         log.info('start handle request')
 
-        EnumerationContext_Dict = {}
+        ENUMERATIONCONTEXT_DICT = {}
 
         self.stream = SocketStream(self.request)
         negotiated = False
@@ -107,13 +115,6 @@ class ADWSServer(SocketServer.BaseRequestHandler):
 
                 import server
 
-                from samba.samdb import SamDB
-                from samba.param import LoadParm
-                from samba.auth import system_session
-                lp = LoadParm()
-                lp.load_default()
-                samdb = SamDB(lp=lp, session_info=system_session())
-
                 ack_xml = None
                 if decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Get':
                     if 'da:IdentityManagementOperation' in decoded['s:Header']:
@@ -124,6 +125,16 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                     ack_xml = command.build_response()
 
                     print(ack_xml)
+                elif decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate':
+                    command = server.Enumerate(decoded, ENUMERATIONCONTEXT_DICT, xs, samdb)
+                    command.validate()
+                    ack_xml = command.build_response()
+                    print(ack_xml)
+                elif decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull':
+                    command = server.EnumeratePull(decoded, ENUMERATIONCONTEXT_DICT, xs, samdb)
+                    ack_xml = command.build_response()
+                    print(ack_xml)
+
 
                 assert ack_xml, 'I do not know how to answer'
 

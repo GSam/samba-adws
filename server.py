@@ -3,6 +3,7 @@ from base64 import b64encode
 from samba.ndr import ndr_unpack
 from samba.dcerpc import misc
 from samba import dsdb
+import uuid
 
 class SchemaSyntax(object):
 
@@ -221,6 +222,162 @@ class BaseGet(AbstractFetch):
         output = self.schema.encode(self.response,
                                     path="s:Envelope",
                                     etree_element_class=ET.Element)
+
+        return ET.tostring(output).decode()
+
+
+class Enumerate(AbstractFetch):
+
+    def __init__(self, xml, dictionary, schema, samdb):
+        self.xml = xml
+        self.schema = schema
+        self.samdb = samdb
+        self.message_id = self.xml['s:Header']['a:MessageID'][0]
+        self.enumeration_context = str(uuid.uuid4())
+
+        self.dictionary = dictionary
+
+        self.response = {
+            "@xmlns:a": "http://www.w3.org/2005/08/addressing",
+            "@xmlns:s": "http://www.w3.org/2003/05/soap-envelope",
+            "s:Header": {
+                "a:Action": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse",
+                    }
+                ],
+                "a:RelatesTo": [
+                    {
+                        "$": self.message_id,
+                    }
+                ],
+            },
+            "s:Body": {
+                "wsen:EnumerateResponse": [
+                    {
+                        "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+                        "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                        "@xmlns:wsen": "http://schemas.xmlsoap.org/ws/2004/09/enumeration",
+                        "wsen:Expires": "2024-03-15T05:34:42.6778076Z", # TODO
+                        "wsen:EnumerationContext": self.enumeration_context,
+                    }
+                ]
+            },
+        }
+
+    def validate(self):
+        context = {'cookie': ''}
+        context['query'] = self.xml['s:Body']['wsen:Enumerate'][0]['wsen:Filter']['adlq:LdapQuery']
+        context['selection'] = self.xml['s:Body']['wsen:Enumerate'][0]['ad:Selection']
+        self.dictionary[self.enumeration_context] = context
+
+    def build_response(self):
+        output = self.schema.encode(self.response,
+                                    path="s:Envelope",
+                                    etree_element_class=ET.Element)
+        return ET.tostring(output).decode()
+
+class EnumeratePull(AbstractFetch):
+
+    def __init__(self, xml, dictionary, schema, samdb):
+        self.xml = xml
+        self.schema = schema
+        self.samdb = samdb
+        self.message_id = self.xml['s:Header']['a:MessageID'][0]
+        self.enumeration_context = self.xml['s:Body']['wsen:Pull'][0]['wsen:EnumerationContext']
+
+        self.dictionary = dictionary
+
+        self.response = {
+            "@xmlns:a": "http://www.w3.org/2005/08/addressing",
+            "@xmlns:s": "http://www.w3.org/2003/05/soap-envelope",
+            "s:Header": {
+                "a:Action": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://schemas.xmlsoap.org/ws/2004/09/enumeration/PullResponse",
+                    }
+                ],
+                "a:RelatesTo": [
+                    {
+                        "$": self.message_id,
+                    }
+                ],
+            },
+            "s:Body": {
+                "wsen:PullResponse": [
+                    {
+                        "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+                        "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                        "@xmlns:addata": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Data",
+                        "@xmlns:ad": "http://schemas.microsoft.com/2008/1/ActiveDirectory",
+                        "@xmlns:wsen": "http://schemas.xmlsoap.org/ws/2004/09/enumeration",
+                        "wsen:EnumerationContext": self.enumeration_context,
+                        "wsen:Items": {
+                            "addata:top": [
+
+                            ]
+                        },
+                        "wsen:EndOfSequence": {
+                            "@xmlns:wsen": "http://schemas.xmlsoap.org/ws/2004/09/enumeration"
+                        },
+                    }
+                ]
+            },
+        }
+
+
+    def build_response(self):
+        context = self.dictionary[self.enumeration_context]
+
+        max_elements = self.xml['s:Body']['wsen:Pull'][0]['wsen:MaxElements']
+
+        end = True
+        print(context)
+
+        attr_names = [attr.split(':')[-1] for attr in context['selection']['ad:SelectionProperty']]
+
+        scope = SCOPE_ADLQ_TO_LDB[context['query']['adlq:Scope'].lower()]
+
+        result = self.samdb.search(base=context['query']['adlq:BaseObject'],
+                                   scope=scope,
+                                   expression=context['query']['adlq:Filter'],
+                                   attrs=attr_names,
+                                   controls=['paged_results:1:%s%s' % (max_elements, context['cookie'])]
+        )
+
+        ctrls = [str(c) for c in result.controls if
+                 str(c).startswith("paged_results")]
+        spl = ctrls[0].rsplit(':', 3)
+        if len(spl) == 3:
+            new_cookie = ':' + spl[-1]
+            context['cookie'] = new_cookie
+            end = False
+
+        objects = [
+            self.build_attr_list(msg, attr_names=attr_names)
+            for msg in result.msgs
+        ]
+
+        resp_array = self.response['s:Body']['wsen:PullResponse'][0]['wsen:Items']['addata:top']
+
+        for obj in objects:
+            resp_dict = {}
+            for attr in obj:
+                resp_dict.update(attr.to_dict())
+
+            resp_array.append(resp_dict)
+
+        if not end:
+            del self.response['s:Body']['wsen:PullResponse'][0]['wsen:EndOfSequence']
+        else:
+            del self.response['s:Body']['wsen:PullResponse'][0]['wsen:EnumerationContext']
+
+
+        output = self.schema.encode(self.response,
+                                    path="s:Envelope",
+                                    etree_element_class=ET.Element)
         return ET.tostring(output).decode()
 
 import ldb
@@ -282,6 +439,13 @@ SYNTHETIC_ATTRS = {
 }
 
 ROOT_DSE_GUID = '11111111-1111-1111-1111-111111111111'
+
+# https://msdn.microsoft.com/en-us/library/dd340513.aspx
+SCOPE_ADLQ_TO_LDB = {
+    'base': ldb.SCOPE_BASE,
+    'onelevel': ldb.SCOPE_ONELEVEL,
+    'subtree': ldb.SCOPE_SUBTREE,
+}
 
 class LdapAttr(object):
 
