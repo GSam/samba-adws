@@ -427,7 +427,6 @@ class Enumerate(Transfer):
 
         while True:
             pull = EnumeratePull(context, 5, self.schema, self.service_map)
-            print(pull.to_xml())
             pull_response = pull.send()
             print(pull_response)
 
