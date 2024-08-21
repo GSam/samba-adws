@@ -29,10 +29,13 @@ class SocketStream:
             if rs:
                 data = rs[0].recv(4096)
         else:
-            self._socket.setblocking(1)
+            self._socket.settimeout(300)
             data = b''
             while count:
                 d = self._socket.recv(count)
+                if len(d) == 0:
+                    raise Exception("EXIT!")
+
                 count -= len(d)
                 data += d
 
