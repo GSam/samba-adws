@@ -357,3 +357,140 @@ class Delete(Transfer):
             },
             "s:Body": None,
         }
+
+class Enumerate(Transfer):
+
+    def __init__(self, iden, ldap_filter, scope, schema, service_map):
+        self.service = service_map['Windows/Enumeration']
+        self.service_map = service_map
+        self.schema = schema
+
+        self.xml = {
+            "@xmlns:s": "http://www.w3.org/2003/05/soap-envelope",
+            "@xmlns:a": "http://www.w3.org/2005/08/addressing",
+            "@xmlns:addata": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Data",
+            "@xmlns:ad": "http://schemas.microsoft.com/2008/1/ActiveDirectory",
+            "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+            "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            "s:Header": {
+                "a:Action": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate",
+                    }
+                ],
+                "ad:instance": ["ldap:389"],
+                "a:MessageID": ["urn:uuid:" + str(uuid.uuid4())],
+                "a:ReplyTo": [{"a:Address": "http://www.w3.org/2005/08/addressing/anonymous"}],
+                "a:To": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": self.service.uri,
+                    }
+                ],
+            },
+            "s:Body": {
+                "@xmlns:wsen": "http://schemas.xmlsoap.org/ws/2004/09/enumeration",
+                "@xmlns:adlq": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/LdapQuery",
+                "wsen:Enumerate": [
+                    {
+                        "wsen:Filter": {
+                            "@Dialect": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/LdapQuery",
+                            "adlq:LdapQuery": {
+                                "adlq:Filter": ldap_filter,
+                                "adlq:BaseObject": iden,
+                                "adlq:Scope": scope,
+                            },
+                        },
+                        "ad:Selection": {
+                            "@Dialect": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/XPath-Level-1",
+                            "ad:SelectionProperty": [
+                                "ad:distinguishedName",
+                                "addata:name",
+                                "addata:objectClass",
+                                "addata:objectGUID",
+                                "addata:nCName",
+                            ],
+                        },
+                    }
+                ],
+            },
+        }
+
+    def send_all(self):
+        xml = self.send()
+        print(xml)
+        response = self.schema.to_dict(xml)
+        context = response['s:Body']['wsen:EnumerateResponse'][0]['wsen:EnumerationContext']
+
+        responses = {'init': response, 'pull': []}
+
+        while True:
+            pull = EnumeratePull(context, 5, self.schema, self.service_map)
+            print(pull.to_xml())
+            pull_response = pull.send()
+            print(pull_response)
+
+            responses['pull'].append(pull_response)
+
+            decoded = self.schema.to_dict(pull_response)
+            if 'wsen:EndOfSequence' in decoded['s:Body']['wsen:PullResponse'][0]:
+                break
+
+            context = decoded['s:Body']['wsen:PullResponse'][0]['wsen:EnumerationContext']
+
+        return responses
+
+
+class EnumeratePull(Transfer):
+
+    def __init__(self, context, max_elem, schema, service_map):
+        self.service = service_map['Windows/Enumeration']
+        self.schema = schema
+
+        self.xml = {
+            "@xmlns:s": "http://www.w3.org/2003/05/soap-envelope",
+            "@xmlns:a": "http://www.w3.org/2005/08/addressing",
+            "@xmlns:addata": "http://schemas.microsoft.com/2008/1/ActiveDirectory/Data",
+            "@xmlns:ad": "http://schemas.microsoft.com/2008/1/ActiveDirectory",
+            "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+            "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            "s:Header": {
+                "a:Action": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull",
+                    }
+                ],
+                "ad:instance": ["ldap:389"],
+                "a:MessageID": ["urn:uuid:" + str(uuid.uuid4())],
+                "a:ReplyTo": [{"a:Address": "http://www.w3.org/2005/08/addressing/anonymous"}],
+                "a:To": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": self.service.uri,
+                    }
+                ],
+            },
+            "s:Body": {
+                "@xmlns:wsen": "http://schemas.xmlsoap.org/ws/2004/09/enumeration",
+                "wsen:Pull": [
+                    {
+                        "wsen:EnumerationContext": context,
+                        "wsen:MaxElements": max_elem,
+                        "ad:controls": {
+                            "ad:control": [
+                                {
+                                    "@type": "1.2.840.113556.1.4.801",
+                                    "@criticality": True,
+                                    "ad:controlValue": {
+                                        "@xsi:type": "xsd:base64Binary",
+                                        "$": "MIQAAAADAgEH",
+                                    },
+                                }
+                            ]
+                        },
+                    }
+                ],
+            },
+        }
