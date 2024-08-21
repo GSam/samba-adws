@@ -401,6 +401,7 @@ SCHEMA_SYNTAX_LIST = [
     SchemaSyntax(ldb.SYNTAX_GENERALIZED_TIME, 'GeneralizedTimeString'),
     SchemaSyntax(ldb.SYNTAX_OBJECT_IDENTIFIER, 'ObjectIdentifier'),
     SchemaSyntax(dsdb.DSDB_SYNTAX_BINARY_DN, 'DNBinary'),
+    SchemaSyntax("1.2.840.113556.1.4.907", 'NTSecurityDescriptor', xsi_type='xsd:base64Binary'),
 ]
 
 OID_SCHEMA_SYNTAX_DICT = {obj.oid: obj for obj in SCHEMA_SYNTAX_LIST}
