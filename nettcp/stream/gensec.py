@@ -81,9 +81,8 @@ class GENSECStream:
             log.debug('Doing step')
             client_finished, client_to_server = self.client_ctx.update(token)
 
-            self._inner.write(client_to_server)
-
             if not client_finished:
+                self._inner.write(client_to_server)
                 token = self._inner.read()
             else:
                 log.debug('GSSAPI Handshake done')
