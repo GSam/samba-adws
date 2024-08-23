@@ -479,11 +479,6 @@ class SyntheticAttr(object):
         self.attr = attr
         self.xsi_type = xsi_type
 
-        # FIXME: could be other iterable
-        if not isinstance(vals, list):
-            vals = [vals]
-        #if self.xsi_type == 'xsd:base64Binary':
-        #    vals = [b64encode(val) for val in vals]
         self.vals = vals
 
     def to_dict(self):
