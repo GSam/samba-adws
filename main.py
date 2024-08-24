@@ -4,8 +4,6 @@ log = logging.getLogger(__name__)
 
 import sys
 import uuid
-import binascii
-import argparse
 
 try:
     import SocketServer
@@ -20,6 +18,9 @@ from nettcp.stream.gensec import GENSECStream
 
 from wcf.xml2records import XMLParser
 from wcf.records import dump_records
+
+from samba.samdb import SamDB
+from samba.param import LoadParm
 
 #from adws import sambautils
 #from adws import xmlutils
@@ -60,13 +61,6 @@ class ADWSServer(SocketServer.BaseRequestHandler):
     def handle(self):
         # this func is called in __init__ of base class
 
-        from samba.samdb import SamDB
-        from samba.param import LoadParm
-        from samba.auth import system_session
-        lp = LoadParm()
-        lp.load_default()
-        samdb = SamDB(lp=lp, session_info=system_session())
-
         log.info('start handle request')
 
         ENUMERATIONCONTEXT_DICT = {}
@@ -92,6 +86,13 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                     self.stream = GENSECStream(self.stream)
                     self.stream.negotiate_server()
                     negotiated = True
+
+                    lp = LoadParm()
+                    lp.load_default()
+
+                    self.session_info = self.stream.client_ctx.session_info()
+                    samdb = SamDB(lp=lp, session_info=self.session_info)
+
                     log.info('negotiate finished')
                 else:
                     log.info('negotiate skipped')
