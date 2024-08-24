@@ -90,24 +90,56 @@ class SimpleGet(AbstractFetch):
         return True
 
     def build_response(self):
-        result = self.samdb.search(base='', scope=ldb.SCOPE_BASE)
-        # ldb.MessageElement
-        msg = result[0]
+        base = self.xml['s:Header']['ad:objectReferenceProperty'][0]
+        if base == ROOT_DSE_GUID:
+            result = self.samdb.search(base='', scope=ldb.SCOPE_BASE)
 
-        attrs = self.build_attr_list(msg, is_root_dse=True, exclude=['dn', 'vendorName'])
+            # ldb.MessageElement
+            msg = result[0]
 
-        attrs.insert(0, SyntheticAttr('objectReferenceProperty', [ROOT_DSE_GUID]))
-        # these 3 appear at last
-        attrs.append(SyntheticAttr('container-hierarchy-parent', [ROOT_DSE_GUID]))
-        attrs.append(SyntheticAttr('relativeDistinguishedName', ['']))
-        attrs.append(SyntheticAttr('distinguishedName', ['']))
+            attrs = self.build_attr_list(msg, is_root_dse=True, exclude=['dn', 'vendorName'])
 
-        resp_dict = self.response['s:Body']['addata:top'][0]
+            attrs.insert(0, SyntheticAttr('objectReferenceProperty', [ROOT_DSE_GUID]))
+            # these 3 appear at last
+            attrs.append(SyntheticAttr('container-hierarchy-parent', [ROOT_DSE_GUID]))
+            attrs.append(SyntheticAttr('relativeDistinguishedName', ['']))
+            attrs.append(SyntheticAttr('distinguishedName', ['']))
 
-        for attr in attrs:
-            resp_dict.update(attr.to_dict())
+            resp_dict = self.response['s:Body']['addata:top'][0]
 
-        if False:
+            for attr in attrs:
+                resp_dict.update(attr.to_dict())
+        else:
+            attr_names = []
+            result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE,
+                                       attrs=['*', 'parentGUID'])
+
+            msg = result[0]
+
+            attrs = self.build_attr_list(msg, is_root_dse=False, attr_names=attr_names,
+                                         exclude=['dn', 'parentGUID'])
+
+            object_guid = str(ndr_unpack(misc.GUID, msg['objectGUID'][0]))
+            if 'parentGUID' in msg:
+                parent_guid = str(ndr_unpack(misc.GUID, msg['parentGUID'][0]))
+
+            dn = str(msg['distinguishedName'][0])
+            oc = str(msg['objectClass'][-1])
+
+            attrs.insert(0, SyntheticAttr('objectReferenceProperty', [object_guid]))
+            # these 3 appear at last
+            if 'parentGUID' in msg:
+                attrs.append(SyntheticAttr('container-hierarchy-parent', [parent_guid]))
+
+            attrs.append(SyntheticAttr('relativeDistinguishedName', [get_rdn(msg['dn'])]))
+            attrs.append(SyntheticAttr('distinguishedName', [dn]))
+
+            resp_dict = self.response['s:Body']['addata:top'][0]
+
+            for attr in attrs:
+                resp_dict.update(attr.to_dict())
+
+            # Get the objectClass correct
             body = self.response['s:Body']
             body['addata:' + oc] = body.pop('addata:top')
 
@@ -194,22 +226,36 @@ class Get(AbstractFetch):
             result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE, attrs=['*', 'parentGUID'])
             msg = result[0]
 
-            attrs = self.build_attr_list(msg, is_root_dse=is_root_dse, attr_names=attr_names,
-                                         exclude=['dn', 'parentGUID'])
+            if is_root_dse:
+                attrs = self.build_attr_list(msg, is_root_dse=is_root_dse, attr_names=attr_names,
+                                             exclude=['dn', 'vendorName'])
+            else:
+                attrs = self.build_attr_list(msg, is_root_dse=is_root_dse, attr_names=attr_names,
+                                             exclude=['dn', 'parentGUID'])
 
-            object_guid = str(ndr_unpack(misc.GUID, msg['objectGUID'][0]))
             if 'parentGUID' in msg:
                 parent_guid = str(ndr_unpack(misc.GUID, msg['parentGUID'][0]))
 
-            dn = str(msg['distinguishedName'][0])
-            oc = str(msg['objectClass'][-1])
+            if is_root_dse:
+                object_guid = ROOT_DSE_GUID
+                dn = ''
+                oc = 'top'
+                rdn = ''
+            else:
+                object_guid = str(ndr_unpack(misc.GUID, msg['objectGUID'][0]))
+                dn = str(msg['distinguishedName'][0])
+                oc = str(msg['objectClass'][-1])
+                rdn = get_rdn(msg['dn'])
 
             attrs.insert(0, SyntheticAttr('objectReferenceProperty', [object_guid]))
             # these 3 appear at last
-            if 'parentGUID' in msg:
-                attrs.append(SyntheticAttr('container-hierarchy-parent', [parent_guid]))
+            if not is_root_dse:
+                if 'parentGUID' in msg:
+                    attrs.append(SyntheticAttr('container-hierarchy-parent', [parent_guid]))
+            else:
+                attrs.append(SyntheticAttr('container-hierarchy-parent', [ROOT_DSE_GUID]))
 
-            attrs.append(SyntheticAttr('relativeDistinguishedName', [get_rdn(msg['dn'])]))
+            attrs.append(SyntheticAttr('relativeDistinguishedName', [rdn]))
             attrs.append(SyntheticAttr('distinguishedName', [dn]))
 
             resp_dict = {}
