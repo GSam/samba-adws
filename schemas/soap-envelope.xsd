@@ -52,10 +52,7 @@
   <xs:element name="Body" type="tns:Body" />
   <xs:complexType name="Body" >
     <xs:sequence>
-      <!-- XXX Edited to enable schema checking
       <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
-      -->
-      <xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
