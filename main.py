@@ -3,7 +3,6 @@ import logging
 log = logging.getLogger(__name__)
 
 import sys
-import uuid
 
 try:
     import SocketServer
