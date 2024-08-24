@@ -50,7 +50,7 @@ class AbstractFetch(object):
 
         return attrs
 
-class Get(AbstractFetch):
+class SimpleGet(AbstractFetch):
 
     def __init__(self, xml, schema, samdb):
         self.xml = xml
@@ -117,7 +117,7 @@ class Get(AbstractFetch):
         return ET.tostring(output).decode()
 
 
-class BaseGet(AbstractFetch):
+class Get(AbstractFetch):
 
     def __init__(self, xml, schema, samdb):
         self.xml = xml

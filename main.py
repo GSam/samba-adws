@@ -118,9 +118,9 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                 ack_xml = None
                 if decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Get':
                     if 'da:IdentityManagementOperation' in decoded['s:Header']:
-                        command = server.BaseGet(decoded, xs, samdb)
-                    else:
                         command = server.Get(decoded, xs, samdb)
+                    else:
+                        command = server.SimpleGet(decoded, xs, samdb)
                     command.validate()
                     ack_xml = command.build_response()
 
