@@ -355,6 +355,67 @@ class Create(object):
                                     etree_element_class=ET.Element)
         return ET.tostring(output).decode()
 
+class Delete(object):
+
+    def __init__(self, xml, schema, samdb):
+        self.xml = xml
+        self.schema = schema
+        self.samdb = samdb
+        self.message_id = self.xml['s:Header']['a:MessageID'][0]
+
+        self.response = {
+            "@xmlns:s": "http://www.w3.org/2003/05/soap-envelope",
+            "@xmlns:a": "http://www.w3.org/2005/08/addressing",
+            "s:Header": {
+                "a:Action": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://schemas.xmlsoap.org/ws/2004/09/transfer/DeleteResponse",
+                    }
+                ],
+                "a:RelatesTo": [
+                    {
+                        "$": self.message_id,
+                    }
+                ],
+                "a:To": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://www.w3.org/2005/08/addressing/anonymous",
+                    }
+                ],
+            },
+            "s:Body": None,
+        }
+
+    def execute(self):
+        base = self.xml['s:Header']['ad:objectReferenceProperty'][0]
+        controls = []
+
+        if self.xml['s:Body']:
+            ad_controls = self.xml['s:Body']['ad:controls'][0]['ad:control']
+            for ctrl in ad_controls:
+                controls.append(convert_controls(ctrl))
+
+        if controls:
+            self.samdb.delete(base, controls=controls)
+        else:
+            self.samdb.delete(base)
+
+    def build_response(self):
+        try:
+            self.execute()
+        except ldb.LdbError as e:
+            # FIXME Replace with appropriate SOAP fault
+            self.response = None
+            raise e
+
+        output = self.schema.encode(self.response,
+                                    path="s:Envelope",
+                                    etree_element_class=ET.Element)
+        return ET.tostring(output).decode()
+
+
 class Enumerate(AbstractFetch):
 
     def __init__(self, xml, dictionary, schema, samdb):
@@ -538,6 +599,23 @@ def get_rdn(dn):
     if rdn_name and rdn_value:
         return '%s=%s' % (rdn_name, rdn_value)
     return ''
+
+SIMPLE_CONTROLS_MAP = {
+    '1.2.840.113556.1.4.805': 'tree_delete',
+}
+
+CRITICALITY_MAP = {
+    True: '1',
+    False: '0',
+}
+
+def convert_controls(ctrl):
+    oid = ctrl['@type']
+    crit = ctrl['@criticality']
+    if oid in SIMPLE_CONTROLS_MAP:
+        return '{}:{}'.format(SIMPLE_CONTROLS_MAP[oid], CRITICALITY_MAP[crit])
+
+    raise Exception('Unhandled control: ' + oid)
 
 # MS-ADDM 2.3.4 Syntax Mapping
 SCHEMA_SYNTAX_LIST = [

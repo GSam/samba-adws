@@ -151,7 +151,10 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                 elif decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Create':
                     command = server.Create(decoded, self.hostname, xs, samdb)
                     ack_xml = command.build_response()
-
+                    print(ack_xml)
+                elif decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete':
+                    command = server.Delete(decoded, xs, samdb)
+                    ack_xml = command.build_response()
                     print(ack_xml)
                 elif decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate':
                     command = server.Enumerate(decoded, ENUMERATIONCONTEXT_DICT, xs, samdb)
