@@ -381,7 +381,7 @@ class EnumeratePull(AbstractFetch):
         result = self.samdb.search(base=context['query']['adlq:BaseObject'],
                                    scope=scope,
                                    expression=context['query']['adlq:Filter'],
-                                   attrs=attr_names,
+                                   attrs=attr_names + ['objectClass'],
                                    controls=['paged_results:1:%s%s' % (max_elements, context['cookie'])]
         )
 
@@ -394,13 +394,16 @@ class EnumeratePull(AbstractFetch):
             end = False
 
         objects = [
-            self.build_attr_list(msg, attr_names=attr_names)
+            (
+                str(msg['objectClass'][-1]) if 'objectClass' in msg else None,
+                self.build_attr_list(msg, attr_names=attr_names)
+            )
             for msg in result.msgs
         ]
 
         resp_array = self.response['s:Body']['wsen:PullResponse'][0]['wsen:Items']['addata:top']
 
-        for obj in objects:
+        for _, obj in objects:
             resp_dict = {}
             for attr in obj:
                 resp_dict.update(attr.to_dict())
@@ -416,6 +419,24 @@ class EnumeratePull(AbstractFetch):
         output = self.schema.encode(self.response,
                                     path="s:Envelope",
                                     etree_element_class=ET.Element)
+
+        ################################
+        #
+        # BEGIN REWRITE OF OBJECTCLASSS
+        #
+        # THIS IS DONE HERE AS XMLSCHEMA DOES NOT PRESERVE ORDER
+        #
+        namespaces = {'addata': 'http://schemas.microsoft.com/2008/1/ActiveDirectory/Data'}
+        addata_top = output.findall('.//addata:top', namespaces=namespaces)
+
+        for i, o in enumerate(addata_top):
+            oc = objects[i][0]
+            if oc:
+                o.tag = "{" + namespaces['addata'] + "}" + oc
+        #
+        # END REWRITE OF OBJECTCLASS
+        ################################
+
         return ET.tostring(output).decode()
 
 import ldb
