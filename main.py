@@ -40,6 +40,8 @@ from wcf.records import dump_records
 from samba.samdb import SamDB
 from samba.param import LoadParm
 
+import ldb
+
 #from adws import sambautils
 #from adws import xmlutils
 
@@ -110,6 +112,8 @@ class ADWSServer(SocketServer.BaseRequestHandler):
 
                     self.session_info = self.stream.client_ctx.session_info()
                     samdb = SamDB(lp=lp, session_info=self.session_info)
+                    self.hostname = str(samdb.search(base='', scope=ldb.SCOPE_BASE,
+                                                     attrs=['dnsHostName'])[0]['dnsHostName'])
 
                     log.info('negotiate finished')
                 else:
@@ -141,6 +145,11 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                     else:
                         command = server.SimpleGet(decoded, xs, samdb)
                     command.validate()
+                    ack_xml = command.build_response()
+
+                    print(ack_xml)
+                elif decoded['s:Header']['a:Action'][0]['$'] == 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Create':
+                    command = server.Create(decoded, self.hostname, xs, samdb)
                     ack_xml = command.build_response()
 
                     print(ack_xml)

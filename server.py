@@ -264,6 +264,93 @@ class Get(AbstractFetch):
         return ET.tostring(output).decode()
 
 
+class Create(object):
+
+    def __init__(self, xml, hostname, schema, samdb):
+        self.xml = xml
+        self.schema = schema
+        self.samdb = samdb
+
+        self.response = {
+            "@xmlns:s": "http://www.w3.org/2003/05/soap-envelope",
+            "@xmlns:a": "http://www.w3.org/2005/08/addressing",
+            "s:Header": {
+                "a:Action": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://schemas.xmlsoap.org/ws/2004/09/transfer/CreateResponse",
+                    }
+                ],
+                "a:RelatesTo": [
+                    {
+                        "$": "urn:uuid:10faa255-55db-43a7-951b-bb1f2d20d3bd",
+                    }
+                ],
+                "a:To": [
+                    {
+                        "@s:mustUnderstand": True,
+                        "$": "http://www.w3.org/2005/08/addressing/anonymous",
+                    }
+                ],
+            },
+            "s:Body": {
+                "wst:ResourceCreated": [
+                    {
+                        "@xmlns:wst": "http://schemas.xmlsoap.org/ws/2004/09/transfer",
+                        "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+                        "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                        "@xmlns:wsa": "http://www.w3.org/2005/08/addressing",
+                        "@xmlns:ad": "http://schemas.microsoft.com/2008/1/ActiveDirectory",
+                        "wsa:Address": [
+                            "net.tcp://{}:9389/ActiveDirectoryWebServices/Windows/Resource".format(hostname)
+                        ],
+                        "wsa:ReferenceParameters": [
+                            {
+                                "ad:objectReferenceProperty": [
+                                    ROOT_DSE_GUID
+                                ],
+                                "ad:instance": ["ldap:389"],
+                            }
+                        ],
+                    }
+                ]
+            },
+        }
+
+    def execute(self):
+        self.msg_dict = {}
+        add_request = self.xml['s:Body']['da:AddRequest'][0]
+
+        for attr in add_request['da:AttributeTypeAndValue']:
+            if attr['da:AttributeType'] == 'ad:relativeDistinguishedName':
+                self.rdn = attr['da:AttributeValue']['ad:value'][0]['$']
+
+            elif attr['da:AttributeType'] == 'ad:container-hierarchy-parent':
+                self.parent = attr['da:AttributeValue']['ad:value'][0]['$']
+            else:
+                name = attr['da:AttributeType'].split(':')[-1]
+                val = [v['$'] for v in attr['da:AttributeValue']['ad:value']]
+                self.msg_dict.update({name: val})
+
+        self.dn = "{},{}".format(self.rdn, self.parent)
+        self.msg_dict['dn'] = self.dn
+        print(self.msg_dict)
+
+        self.samdb.add(self.msg_dict)
+
+    def build_response(self):
+        try:
+            self.execute()
+        except ldb.LdbError as e:
+            # FIXME Replace with appropriate SOAP fault
+            self.response = None
+            raise e
+
+        output = self.schema.encode(self.response,
+                                    path="s:Envelope",
+                                    etree_element_class=ET.Element)
+        return ET.tostring(output).decode()
+
 class Enumerate(AbstractFetch):
 
     def __init__(self, xml, dictionary, schema, samdb):
