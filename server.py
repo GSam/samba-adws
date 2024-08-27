@@ -757,8 +757,8 @@ ROOT_DSE_ATTRS = {
     'supportedCapabilities': ldb.SYNTAX_OBJECT_IDENTIFIER,
     'supportedControl': ldb.SYNTAX_OBJECT_IDENTIFIER,
     'supportedLDAPVersion': ldb.SYNTAX_INTEGER,
-    # 'verdorName': 'not exist',
     'msDS-PortLDAP': ldb.SYNTAX_INTEGER,
+    # vendorName is Samba-only - currently omitted from response
 }
 
 SYNTHETIC_ATTRS = {
