@@ -1,5 +1,5 @@
 import lxml.etree as ET
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from samba.ndr import ndr_unpack
 from samba.dcerpc import misc
 from samba import dsdb
@@ -200,9 +200,19 @@ class Get(AbstractFetch):
             is_root_dse = True
 
         base_search = self.xml['s:Body']['da:BaseObjectSearchRequest'][0]
+
+        controls = []
+        if 'ad:controls' in base_search:
+            ad_controls = base_search['ad:controls']['ad:control']
+            for ctrl in ad_controls:
+                controls.append(convert_controls(ctrl))
+
+        print(controls)
+
         if 'da:AttributeType' in base_search:
             attr_names = [attr.split(':')[-1] for attr in base_search['da:AttributeType']]
-            result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE, attrs=attr_names)
+            result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE,
+                                       attrs=attr_names, controls=controls)
 
             # ldb.MessageElement
             msg = result[0]
@@ -215,7 +225,8 @@ class Get(AbstractFetch):
                 resp_array.append(attr.to_dict())
         else:
             attr_names = []
-            result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE, attrs=['*', 'parentGUID'])
+            result = self.samdb.search(base=base, scope=ldb.SCOPE_BASE,
+                                       attrs=['*', 'parentGUID'], controls=controls)
             msg = result[0]
 
             if is_root_dse:
@@ -523,10 +534,23 @@ class EnumeratePull(AbstractFetch):
     def build_response(self):
         context = self.dictionary[self.enumeration_context]
 
-        max_elements = self.xml['s:Body']['wsen:Pull'][0]['wsen:MaxElements']
+        pull = self.xml['s:Body']['wsen:Pull'][0]
+        max_elements = pull['wsen:MaxElements']
+
+        controls = []
+        if 'ad:controls' in pull:
+            ad_controls = pull['ad:controls']['ad:control']
+            for ctrl in ad_controls:
+                convert = convert_controls(ctrl)
+
+                if convert.startswith('paged_results:'):
+                    raise Exception('Not allowed to use paging here!')
+
+                controls.append(convert)
 
         end = True
         print(context)
+        print(controls)
 
         attr_names = [attr.split(':')[-1] for attr in context['selection']['ad:SelectionProperty']]
 
@@ -536,7 +560,7 @@ class EnumeratePull(AbstractFetch):
                                    scope=scope,
                                    expression=context['query']['adlq:Filter'],
                                    attrs=attr_names + ['objectClass'],
-                                   controls=['paged_results:1:%s%s' % (max_elements, context['cookie'])]
+                                   controls=controls + ['paged_results:1:%s%s' % (max_elements, context['cookie'])]
         )
 
         ctrls = [str(c) for c in result.controls if
@@ -602,8 +626,40 @@ def get_rdn(dn):
         return '%s=%s' % (rdn_name, rdn_value)
     return ''
 
+def handle_sd_flags(ctrl):
+    from pyasn1.codec.ber.decoder import decode
+    oid = ctrl['@type']
+    crit = ctrl['@criticality']
+
+    import asn1ctrl
+    ctrl_bytes = b64decode(ctrl['ad:controlValue']['$'])
+
+    record, _ = decode(ctrl_bytes, asn1Spec=asn1ctrl.SDFlagsRequestValue())
+    return 'sd_flags:%s:%d' % (CRITICALITY_MAP[crit], record['flags'])
+
+def handle_paged_results(ctrl):
+    from pyasn1.codec.ber.decoder import decode
+    oid = ctrl['@type']
+    crit = ctrl['@criticality']
+
+    import asn1ctrl
+    ctrl_bytes = b64decode(ctrl['ad:controlValue']['$'])
+
+    record, _ = decode(ctrl_bytes, asn1Spec=asn1ctrl.PagedResultsControlValue())
+
+    cookie = ''
+    if record['cookie']:
+        cookie = ':' + record['cookie']
+
+    return 'paged_results:%s:%s%s' % (CRITICALITY_MAP[crit], record['size'], cookie)
+
 SIMPLE_CONTROLS_MAP = {
     '1.2.840.113556.1.4.805': 'tree_delete',
+}
+
+COMPLEX_CONTROLS_MAP = {
+    '1.2.840.113556.1.4.801': handle_sd_flags,
+    '1.2.840.113556.1.4.319': handle_paged_results,
 }
 
 CRITICALITY_MAP = {
@@ -616,6 +672,9 @@ def convert_controls(ctrl):
     crit = ctrl['@criticality']
     if oid in SIMPLE_CONTROLS_MAP:
         return '{}:{}'.format(SIMPLE_CONTROLS_MAP[oid], CRITICALITY_MAP[crit])
+
+    if oid in COMPLEX_CONTROLS_MAP:
+        return COMPLEX_CONTROLS_MAP[oid](ctrl)
 
     raise Exception('Unhandled control: ' + oid)
 
