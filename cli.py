@@ -67,6 +67,9 @@ command = client.RootDSEGet(xs, service_map)
 output = command.send()
 
 print(output)
+decoded = xs.to_dict(output)
+
+domain_dn = decoded['s:Body']['addata:top'][0]['addata:rootDomainNamingContext'][0]['ad:value'][0]['$']
 
 command = client.RootDSEPortLDAP(xs, service_map)
 output = command.send()
