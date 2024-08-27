@@ -1,0 +1,23 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/soap/fault</a:Action>
+  <a:RelatesTo>urn:uuid:ff545c94-f449-43e8-85db-6f901fe93352</a:RelatesTo>
+  <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+ </s:Header>
+ <s:Body>
+  <s:Fault>
+   <s:Code>
+    <s:Value>s:Sender</s:Value>
+    <s:Subcode>
+     <s:Value>a:ActionNotSupported</s:Value>
+    </s:Subcode>
+   </s:Code>
+   <s:Reason>
+    <s:Text xml:lang="en-US">The message with Action 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Create' cannot be processed at the receiver, due to a ContractFilter mismatch at the EndpointDispatcher. This may be because of either a contract mismatch (mismatched Actions between sender and receiver) or a binding/security mismatch between the sender and the receiver.  Check that sender and receiver have the same contract and the same binding (including security requirements, e.g. Message, Transport, None).</s:Text>
+   </s:Reason>
+   <s:Detail>
+    <string xmlns="http://schemas.microsoft.com/2003/10/Serialization/">http://schemas.xmlsoap.org/ws/2004/09/transfer/Create</string>
+   </s:Detail>
+  </s:Fault>
+ </s:Body>
+</s:Envelope>

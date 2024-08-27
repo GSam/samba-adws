@@ -1,0 +1,28 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess/fault</a:Action>
+  <a:RelatesTo>urn:uuid:0e4a2ab6-6077-49da-914c-206e1d92ef5f</a:RelatesTo>
+  <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+ </s:Header>
+ <s:Body>
+  <s:Fault>
+   <s:Code>
+    <s:Value>s:Sender</s:Value>
+    <s:Subcode>
+     <s:Value xmlns:a="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">a:UnwillingToPerform</s:Value>
+    </s:Subcode>
+   </s:Code>
+   <s:Reason>
+    <s:Text xml:lang="en-US">The operation failed because of a bad parameter.</s:Text>
+   </s:Reason>
+   <s:Detail>
+    <FaultDetail xmlns="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <ArgumentError>
+      <Message>The Instance present in the Request Header is invalid.</Message>
+      <ShortMessage>InvalidInstanceInTheHeader</ShortMessage>
+     </ArgumentError>
+    </FaultDetail>
+   </s:Detail>
+  </s:Fault>
+ </s:Body>
+</s:Envelope>

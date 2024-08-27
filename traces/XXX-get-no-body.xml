@@ -1,0 +1,26 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.dmtf.org/wbem/wsman/1/wsman/fault</a:Action>
+  <a:RelatesTo>urn:uuid:ffa3303f-9ed1-4ab6-b23a-7d5ada5de47a</a:RelatesTo>
+  <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+ </s:Header>
+ <s:Body>
+  <s:Fault>
+   <s:Code>
+    <s:Value>s:Sender</s:Value>
+    <s:Subcode>
+     <s:Value xmlns:a="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">a:SchemaValidationError</s:Value>
+    </s:Subcode>
+   </s:Code>
+   <s:Reason>
+    <s:Text xml:lang="en-US">Error while deserializing the request. Please make sure that the XML request is syntactically correct.</s:Text>
+   </s:Reason>
+   <s:Detail>
+    <FaultDetail xmlns="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error>The body of the message cannot be read because it is empty.</Error>
+     <ShortError>EInvalidOperation</ShortError>
+    </FaultDetail>
+   </s:Detail>
+  </s:Fault>
+ </s:Body>
+</s:Envelope>

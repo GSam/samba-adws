@@ -1,0 +1,81 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</a:Action>
+  <a:RelatesTo>urn:uuid:2c04f394-639f-4d27-98bf-a4b8f4da915d</a:RelatesTo>
+  <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+ </s:Header>
+ <s:Body>
+  <addata:dMD xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ad:objectReferenceProperty>
+    <ad:value xsi:type="xsd:string">5d19da38-380b-4dfa-9ee4-d38205f25488</ad:value>
+   </ad:objectReferenceProperty>
+   <addata:objectVersion LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">87</ad:value>
+   </addata:objectVersion>
+   <addata:uSNChanged LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">12790</ad:value>
+   </addata:uSNChanged>
+   <addata:showInAdvancedViewOnly LdapSyntax="Boolean">
+    <ad:value xsi:type="xsd:string">TRUE</ad:value>
+   </addata:showInAdvancedViewOnly>
+   <addata:msDS-NcType LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">0</ad:value>
+   </addata:msDS-NcType>
+   <addata:dSASignature LdapSyntax="OctetString">
+    <ad:value xsi:type="xsd:base64Binary">AQAAACgAAAAAAAAAAAAAAAAAAAAAAAAAwCvwveJDokCmPNyH4VL5NQ==</ad:value>
+   </addata:dSASignature>
+   <addata:fSMORoleOwner LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:fSMORoleOwner>
+   <addata:msDs-masteredBy LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:msDs-masteredBy>
+   <addata:instanceType LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">13</ad:value>
+   </addata:instanceType>
+   <addata:whenCreated LdapSyntax="GeneralizedTimeString">
+    <ad:value xsi:type="xsd:string">20240315042546.0Z</ad:value>
+   </addata:whenCreated>
+   <addata:objectCategory LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=DMD,CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:objectCategory>
+   <addata:whenChanged LdapSyntax="GeneralizedTimeString">
+    <ad:value xsi:type="xsd:string">20240315052704.0Z</ad:value>
+   </addata:whenChanged>
+   <addata:masteredBy LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:masteredBy>
+   <addata:objectGUID LdapSyntax="OctetString">
+    <ad:value xsi:type="xsd:base64Binary">ONoZXQs4+k2e5NOCBfJUiA==</ad:value>
+   </addata:objectGUID>
+   <addata:cn LdapSyntax="UnicodeString">
+    <ad:value xsi:type="xsd:string">Schema</ad:value>
+   </addata:cn>
+   <addata:uSNCreated LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">4103</ad:value>
+   </addata:uSNCreated>
+   <addata:distinguishedName LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:distinguishedName>
+   <addata:objectClass LdapSyntax="ObjectIdentifier">
+    <ad:value xsi:type="xsd:string">top</ad:value>
+    <ad:value xsi:type="xsd:string">dMD</ad:value>
+   </addata:objectClass>
+   <addata:replUpToDateVector LdapSyntax="OctetString">
+    <ad:value xsi:type="xsd:base64Binary">AgAAAAAAAAAGAAAAAAAAAD/oKkV1WBxEvnn5JpVZK6EDUAAAAAAAADsTtxwDAAAAvKvOR+AwBUKNt5dkhvJ8MgaAAAAAAAAAvyrFHAMAAAC07fBj4NYPS4Al2FSD6PPxBXAAAAAAAAA7hcIcAwAAABnH4qJThr1HhWMiJSa8T8YHkAAAAAAAAIKYzxwDAAAAwCvwveJDokCmPNyH4VL5NQJAAAAAAAAAHfW0HAMAAAAhY4zXCZ3wQYkzL5Ex56ggBGAAAAAAAABXHr0cAwAAAA==</ad:value>
+   </addata:replUpToDateVector>
+   <addata:dSCorePropagationData LdapSyntax="GeneralizedTimeString">
+    <ad:value xsi:type="xsd:string">16010101000000.0Z</ad:value>
+   </addata:dSCorePropagationData>
+   <addata:name LdapSyntax="UnicodeString">
+    <ad:value xsi:type="xsd:string">Schema</ad:value>
+   </addata:name>
+   <ad:relativeDistinguishedName>
+    <ad:value xsi:type="xsd:string">CN=Schema</ad:value>
+   </ad:relativeDistinguishedName>
+   <ad:distinguishedName>
+    <ad:value xsi:type="xsd:string">CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </ad:distinguishedName>
+  </addata:dMD>
+ </s:Body>
+</s:Envelope>

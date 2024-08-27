@@ -1,0 +1,185 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</a:Action>
+  <a:RelatesTo>urn:uuid:ad4f75cc-2400-4600-bacf-c721762fb214</a:RelatesTo>
+  <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+ </s:Header>
+ <s:Body>
+  <addata:domainDNS xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ad:objectReferenceProperty>
+    <ad:value xsi:type="xsd:string">e949ad97-1e03-43d8-b28a-3e164c66e4d6</ad:value>
+   </ad:objectReferenceProperty>
+   <addata:rIDManagerReference LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=RID Manager$,CN=System,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:rIDManagerReference>
+   <addata:objectCategory LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=Domain-DNS,CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:objectCategory>
+   <addata:msDS-NcType LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">0</ad:value>
+   </addata:msDS-NcType>
+   <addata:systemFlags LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">-1946157056</ad:value>
+   </addata:systemFlags>
+   <addata:minPwdAge LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">-864000000000</ad:value>
+   </addata:minPwdAge>
+   <addata:dSCorePropagationData LdapSyntax="GeneralizedTimeString">
+    <ad:value xsi:type="xsd:string">16010101000000.0Z</ad:value>
+   </addata:dSCorePropagationData>
+   <addata:uASCompat LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">1</ad:value>
+   </addata:uASCompat>
+   <addata:uSNChanged LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">36881</ad:value>
+   </addata:uSNChanged>
+   <addata:instanceType LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">5</ad:value>
+   </addata:instanceType>
+   <addata:creationTime LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">133682689380513522</ad:value>
+   </addata:creationTime>
+   <addata:pwdHistoryLength LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">0</ad:value>
+   </addata:pwdHistoryLength>
+   <addata:ms-DS-MachineAccountQuota LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">10</ad:value>
+   </addata:ms-DS-MachineAccountQuota>
+   <addata:subRefs LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">DC=ForestDnsZones,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">DC=DomainDnsZones,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:subRefs>
+   <addata:lockoutDuration LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">-6000000000</ad:value>
+   </addata:lockoutDuration>
+   <addata:name LdapSyntax="UnicodeString">
+    <ad:value xsi:type="xsd:string">ad</ad:value>
+   </addata:name>
+   <addata:nextRid LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">1000</ad:value>
+   </addata:nextRid>
+   <addata:msDS-AllUsersTrustQuota LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">1000</ad:value>
+   </addata:msDS-AllUsersTrustQuota>
+   <addata:msDS-ExpirePasswordsOnSmartCardOnlyAccounts LdapSyntax="Boolean">
+    <ad:value xsi:type="xsd:string">TRUE</ad:value>
+   </addata:msDS-ExpirePasswordsOnSmartCardOnlyAccounts>
+   <addata:objectClass LdapSyntax="ObjectIdentifier">
+    <ad:value xsi:type="xsd:string">top</ad:value>
+    <ad:value xsi:type="xsd:string">domain</ad:value>
+    <ad:value xsi:type="xsd:string">domainDNS</ad:value>
+   </addata:objectClass>
+   <addata:isCriticalSystemObject LdapSyntax="Boolean">
+    <ad:value xsi:type="xsd:string">TRUE</ad:value>
+   </addata:isCriticalSystemObject>
+   <addata:otherWellKnownObjects LdapSyntax="DNBinary">
+    <ad:value xsi:type="xsd:string">B:32:683A24E2E8164BD3AF86AC3C2CF3F981:CN=Keys,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:1EB93889E40C45DF9F0C64D23BBB6237:CN=Managed Service Accounts,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:otherWellKnownObjects>
+   <addata:fSMORoleOwner LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:fSMORoleOwner>
+   <addata:uSNCreated LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">4099</ad:value>
+   </addata:uSNCreated>
+   <addata:nTMixedDomain LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">0</ad:value>
+   </addata:nTMixedDomain>
+   <addata:replUpToDateVector LdapSyntax="OctetString">
+    <ad:value xsi:type="xsd:base64Binary">AgAAAAAAAAAGAAAAAAAAAD/oKkV1WBxEvnn5JpVZK6EDUAAAAAAAADsTtxwDAAAAvKvOR+AwBUKNt5dkhvJ8MgaAAAAAAAAAvyrFHAMAAAC07fBj4NYPS4Al2FSD6PPxBXAAAAAAAAA7hcIcAwAAABnH4qJThr1HhWMiJSa8T8YHkAAAAAAAAIKYzxwDAAAAwCvwveJDokCmPNyH4VL5NQJAAAAAAAAAHfW0HAMAAAAhY4zXCZ3wQYkzL5Ex56ggBGAAAAAAAABXHr0cAwAAAA==</ad:value>
+   </addata:replUpToDateVector>
+   <addata:modifiedCountAtLastProm LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">0</ad:value>
+   </addata:modifiedCountAtLastProm>
+   <addata:dSASignature LdapSyntax="OctetString">
+    <ad:value xsi:type="xsd:base64Binary">AQAAACgAAAAAAAAAAAAAAAAAAAAAAAAAwCvwveJDokCmPNyH4VL5NQ==</ad:value>
+   </addata:dSASignature>
+   <addata:modifiedCount LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">1</ad:value>
+   </addata:modifiedCount>
+   <addata:objectGUID LdapSyntax="OctetString">
+    <ad:value xsi:type="xsd:base64Binary">l61J6QMe2EOyij4WTGbk1g==</ad:value>
+   </addata:objectGUID>
+   <addata:dc LdapSyntax="UnicodeString">
+    <ad:value xsi:type="xsd:string">ad</ad:value>
+   </addata:dc>
+   <addata:whenCreated LdapSyntax="GeneralizedTimeString">
+    <ad:value xsi:type="xsd:string">20240315042546.0Z</ad:value>
+   </addata:whenCreated>
+   <addata:msDS-Behavior-Version LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">7</ad:value>
+   </addata:msDS-Behavior-Version>
+   <addata:msDS-PerUserTrustTombstonesQuota LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">10</ad:value>
+   </addata:msDS-PerUserTrustTombstonesQuota>
+   <addata:gPLink LdapSyntax="UnicodeString">
+    <ad:value xsi:type="xsd:string">[LDAP://CN={31B2F340-016D-11D2-945F-00C04FB984F9},CN=Policies,CN=System,DC=ad,DC=garming,DC=example,DC=com;0]</ad:value>
+   </addata:gPLink>
+   <addata:masteredBy LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:masteredBy>
+   <addata:minPwdLength LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">7</ad:value>
+   </addata:minPwdLength>
+   <addata:whenChanged LdapSyntax="GeneralizedTimeString">
+    <ad:value xsi:type="xsd:string">20240816080218.0Z</ad:value>
+   </addata:whenChanged>
+   <addata:auditingPolicy LdapSyntax="OctetString">
+    <ad:value xsi:type="xsd:base64Binary">AAE=</ad:value>
+   </addata:auditingPolicy>
+   <addata:msDS-IsDomainFor LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:msDS-IsDomainFor>
+   <addata:lockoutThreshold LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">0</ad:value>
+   </addata:lockoutThreshold>
+   <addata:pwdProperties LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">1</ad:value>
+   </addata:pwdProperties>
+   <addata:distinguishedName LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:distinguishedName>
+   <addata:serverState LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">1</ad:value>
+   </addata:serverState>
+   <addata:forceLogoff LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">-9223372036854775808</ad:value>
+   </addata:forceLogoff>
+   <addata:lockOutObservationWindow LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">-6000000000</ad:value>
+   </addata:lockOutObservationWindow>
+   <addata:objectSid LdapSyntax="SidString">
+    <ad:value xsi:type="xsd:base64Binary">AQQAAAAAAAUVAAAAAs5wkVkj5xpnd6yR</ad:value>
+   </addata:objectSid>
+   <addata:msDs-masteredBy LdapSyntax="DSDNString">
+    <ad:value xsi:type="xsd:string">CN=NTDS Settings,CN=win2016,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:msDs-masteredBy>
+   <addata:wellKnownObjects LdapSyntax="DNBinary">
+    <ad:value xsi:type="xsd:string">B:32:6227F0AF1FC2410D8E3BB10615BB5B0F:CN=NTDS Quotas,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:F4BE92A4C777485E878E9421D53087DB:CN=Microsoft,CN=Program Data,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:09460C08AE1E4A4EA0F64AEE7DAA1E5A:CN=Program Data,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:22B70C67D56E4EFB91E9300FCA3DC1AA:CN=ForeignSecurityPrincipals,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:18E2EA80684F11D2B9AA00C04F79F805:CN=Deleted Objects,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:2FBAC1870ADE11D297C400C04FD8D5CD:CN=Infrastructure,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:AB8153B7768811D1ADED00C04FD8D5CD:CN=LostAndFound,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:AB1D30F3768811D1ADED00C04FD8D5CD:CN=System,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:A361B2FFFFD211D1AA4B00C04FD7D83A:OU=Domain Controllers,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:AA312825768811D1ADED00C04FD8D5CD:CN=Computers,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+    <ad:value xsi:type="xsd:string">B:32:A9D1CA15768811D1ADED00C04FD8D5CD:CN=Users,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </addata:wellKnownObjects>
+   <addata:msDS-PerUserTrustQuota LdapSyntax="Integer">
+    <ad:value xsi:type="xsd:string">1</ad:value>
+   </addata:msDS-PerUserTrustQuota>
+   <addata:maxPwdAge LdapSyntax="LargeInteger">
+    <ad:value xsi:type="xsd:string">-9223372036854775808</ad:value>
+   </addata:maxPwdAge>
+   <ad:relativeDistinguishedName>
+    <ad:value xsi:type="xsd:string">DC=ad</ad:value>
+   </ad:relativeDistinguishedName>
+   <ad:distinguishedName>
+    <ad:value xsi:type="xsd:string">DC=ad,DC=garming,DC=example,DC=com</ad:value>
+   </ad:distinguishedName>
+  </addata:domainDNS>
+ </s:Body>
+</s:Envelope>

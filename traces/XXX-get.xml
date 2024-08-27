@@ -1,0 +1,108 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</a:Action>
+  <a:RelatesTo>urn:uuid:33958bc6-fcf4-4cbd-8144-8e5011a5d7b5</a:RelatesTo>
+  <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+ </s:Header>
+ <s:Body>
+  <da:BaseObjectSearchResponse xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory">
+   <da:PartialAttribute>
+    <addata:user>
+     <ad:objectReferenceProperty>
+      <ad:value xsi:type="xsd:string">204a9853-22de-47a2-9b43-f474126759d8</ad:value>
+     </ad:objectReferenceProperty>
+     <addata:badPasswordTime LdapSyntax="LargeInteger">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:badPasswordTime>
+     <addata:lastLogoff LdapSyntax="LargeInteger">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:lastLogoff>
+     <addata:uSNChanged LdapSyntax="LargeInteger">
+      <ad:value xsi:type="xsd:string">36910</ad:value>
+     </addata:uSNChanged>
+     <addata:distinguishedName LdapSyntax="DSDNString">
+      <ad:value xsi:type="xsd:string">CN=testuser,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+     </addata:distinguishedName>
+     <addata:countryCode LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:countryCode>
+     <addata:whenCreated LdapSyntax="GeneralizedTimeString">
+      <ad:value xsi:type="xsd:string">20240816081313.0Z</ad:value>
+     </addata:whenCreated>
+     <addata:sAMAccountName LdapSyntax="UnicodeString">
+      <ad:value xsi:type="xsd:string">$704000-BMJJMNPT4DIK</ad:value>
+     </addata:sAMAccountName>
+     <addata:accountExpires LdapSyntax="LargeInteger">
+      <ad:value xsi:type="xsd:string">9223372036854775807</ad:value>
+     </addata:accountExpires>
+     <addata:badPwdCount LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:badPwdCount>
+     <addata:instanceType LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">4</ad:value>
+     </addata:instanceType>
+     <addata:pwdLastSet LdapSyntax="LargeInteger">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:pwdLastSet>
+     <addata:sAMAccountType LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">805306368</ad:value>
+     </addata:sAMAccountType>
+     <addata:uSNCreated LdapSyntax="LargeInteger">
+      <ad:value xsi:type="xsd:string">36909</ad:value>
+     </addata:uSNCreated>
+     <addata:objectSid LdapSyntax="SidString">
+      <ad:value xsi:type="xsd:base64Binary">AQUAAAAAAAUVAAAAAs5wkVkj5xpnd6yRBxAAAA==</ad:value>
+     </addata:objectSid>
+     <addata:logonCount LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:logonCount>
+     <addata:lastLogon LdapSyntax="LargeInteger">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:lastLogon>
+     <addata:userAccountControl LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">546</ad:value>
+     </addata:userAccountControl>
+     <addata:cn LdapSyntax="UnicodeString">
+      <ad:value xsi:type="xsd:string">testuser</ad:value>
+     </addata:cn>
+     <addata:primaryGroupID LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">513</ad:value>
+     </addata:primaryGroupID>
+     <addata:objectGUID LdapSyntax="OctetString">
+      <ad:value xsi:type="xsd:base64Binary">U5hKIN4iokebQ/R0EmdZ2A==</ad:value>
+     </addata:objectGUID>
+     <addata:objectCategory LdapSyntax="DSDNString">
+      <ad:value xsi:type="xsd:string">CN=Person,CN=Schema,CN=Configuration,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+     </addata:objectCategory>
+     <addata:whenChanged LdapSyntax="GeneralizedTimeString">
+      <ad:value xsi:type="xsd:string">20240816081313.0Z</ad:value>
+     </addata:whenChanged>
+     <addata:objectClass LdapSyntax="ObjectIdentifier">
+      <ad:value xsi:type="xsd:string">top</ad:value>
+      <ad:value xsi:type="xsd:string">person</ad:value>
+      <ad:value xsi:type="xsd:string">organizationalPerson</ad:value>
+      <ad:value xsi:type="xsd:string">user</ad:value>
+     </addata:objectClass>
+     <addata:codePage LdapSyntax="Integer">
+      <ad:value xsi:type="xsd:string">0</ad:value>
+     </addata:codePage>
+     <addata:dSCorePropagationData LdapSyntax="GeneralizedTimeString">
+      <ad:value xsi:type="xsd:string">16010101000000.0Z</ad:value>
+     </addata:dSCorePropagationData>
+     <addata:name LdapSyntax="UnicodeString">
+      <ad:value xsi:type="xsd:string">testuser</ad:value>
+     </addata:name>
+     <ad:container-hierarchy-parent>
+      <ad:value xsi:type="xsd:string">e949ad97-1e03-43d8-b28a-3e164c66e4d6</ad:value>
+     </ad:container-hierarchy-parent>
+     <ad:relativeDistinguishedName>
+      <ad:value xsi:type="xsd:string">CN=testuser</ad:value>
+     </ad:relativeDistinguishedName>
+     <ad:distinguishedName>
+      <ad:value xsi:type="xsd:string">CN=testuser,DC=ad,DC=garming,DC=example,DC=com</ad:value>
+     </ad:distinguishedName>
+    </addata:user>
+   </da:PartialAttribute>
+  </da:BaseObjectSearchResponse>
+ </s:Body>
+</s:Envelope>

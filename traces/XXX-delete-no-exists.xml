@@ -1,0 +1,34 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/08/addressing/fault</a:Action>
+  <a:RelatesTo>urn:uuid:4571e1b5-d04f-499e-8c86-261f1ff1605e</a:RelatesTo>
+  <a:To s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/anonymous</a:To>
+ </s:Header>
+ <s:Body>
+  <s:Fault>
+   <s:Code>
+    <s:Value>s:Receiver</s:Value>
+    <s:Subcode>
+     <s:Value xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing">a:DestinationUnreachable</s:Value>
+    </s:Subcode>
+   </s:Code>
+   <s:Reason>
+    <s:Text xml:lang="en-US">The failed operation was attempted on a non-existent directory object.</s:Text>
+   </s:Reason>
+   <s:Detail>
+    <FaultDetail xmlns="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <DirectoryError>
+      <Message>The object does not exist.</Message>
+      <ErrorCode>32</ErrorCode>
+      <ExtendedErrorMessage>0000208D: NameErr: DSID-03100245, problem 2001 (NO_OBJECT), data 0, best match of:
+        'DC=ad,DC=garming,DC=example,DC=com'
+</ExtendedErrorMessage>
+      <MatchedDN>DC=ad,DC=garming,DC=example,DC=com</MatchedDN>
+      <Win32ErrorCode>8240</Win32ErrorCode>
+      <ShortMessage>EDirectoryOperation</ShortMessage>
+     </DirectoryError>
+    </FaultDetail>
+   </s:Detail>
+  </s:Fault>
+ </s:Body>
+</s:Envelope>
