@@ -268,6 +268,11 @@ class Get(AbstractFetch):
             resp_array = self.response['s:Body']['da:BaseObjectSearchResponse'][0]['da:PartialAttribute']
             resp_array.append({'addata:' + oc: [ resp_dict ] })
 
+        if len(result.controls) > 0:
+            resp_ctrls = convert_response_controls(result.controls)
+            print(resp_ctrls)
+            self.response['s:Body']['da:BaseObjectSearchResponse'][0]['ad:controls'] = resp_ctrls
+
         output = self.schema.encode(self.response,
                                     path="s:Envelope",
                                     etree_element_class=ET.Element)
@@ -677,6 +682,41 @@ def convert_controls(ctrl):
         return COMPLEX_CONTROLS_MAP[oid](ctrl)
 
     raise Exception('Unhandled control: ' + oid)
+
+def convert_response_controls(resp_ctrls):
+    ad_control = []
+
+    for ctrl in resp_ctrls:
+        if str(ctrl).startswith('paged_results:'):
+            from pyasn1.codec.ber.encoder import encode
+
+            import asn1ctrl
+
+            record = asn1ctrl.PagedResultsControlValue()
+
+            spl = str(ctrl).rsplit(':', 3)
+            if len(spl) == 3:
+                record['cookie'] = spl[-1]
+            else:
+                record['cookie'] = ''
+
+            record['size'] = int(spl[1])
+
+            bytes_output = encode(record)
+
+            ad_control.append({
+                '@type': ctrl.oid,
+                '@criticality': ctrl.critical,
+                'ad:controlValue': {
+                    '@xsi:type': 'xsd:base64Binary',
+                    '$': b64encode(bytes_output).decode()
+                }
+
+            })
+        else:
+            raise Exception('Unhandled control: ' + ctrl)
+
+    return {'ad:control': ad_control}
 
 # MS-ADDM 2.3.4 Syntax Mapping
 SCHEMA_SYNTAX_LIST = [
