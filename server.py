@@ -468,7 +468,7 @@ class Enumerate(AbstractFetch):
                         "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
                         "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
                         "@xmlns:wsen": "http://schemas.xmlsoap.org/ws/2004/09/enumeration",
-                        "wsen:Expires": "2024-03-15T05:34:42.6778076Z", # TODO
+                        "wsen:Expires": "9999-03-15T05:34:42.6778076Z", # FIXME Or not? Never expires
                         "wsen:EnumerationContext": self.enumeration_context,
                     }
                 ]
