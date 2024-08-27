@@ -55,7 +55,7 @@ No other rights are granted by implication, estoppel or otherwise.
     </xs:sequence>
   </xs:complexType>
  
-<!-- 
+<!-- XXX This is relevant to the below change
 The type of the ResourceCreated is effectively 
 the union of wsa04:EndpointReferenceType and 
 wsa10:EndpointReferenceType. Unfortunately, xs:union only 
@@ -67,7 +67,10 @@ addressing type.
   <xs:element name="ResourceCreated">
     <xs:complexType>
       <xs:sequence>
+	<!--  XXX Change to process contents and return data
         <xs:any minOccurs='1' maxOccurs='unbounded' processContents='skip' namespace='##other' />
+	-->
+        <xs:any minOccurs='1' maxOccurs='unbounded' processContents='lax'  namespace='##other' />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -91,6 +91,10 @@ a= xs.to_dict("traces/05-create.xml")
 #print(a)
 print(xs.encode(a, path="s:Envelope"))
 
+a= xs.to_dict("traces/05-create-response.xml")
+#print(a)
+print(xs.encode(a, path="s:Envelope"))
+
 a= xs.to_dict("traces/06-delete.xml")
 #print(a)
 print(xs.encode(a, path="s:Envelope"))
