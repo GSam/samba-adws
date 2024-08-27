@@ -1,0 +1,28 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:addata="http://schemas.microsoft.com/2008/1/ActiveDirectory/Data" xmlns:ad="http://schemas.microsoft.com/2008/1/ActiveDirectory" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:da="http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action>
+  <ad:instance>ldap:389</ad:instance>
+  <ad:objectReferenceProperty>CN=Aggregate,CN=Schema,CN=Configuration,DC=garming,DC=example,DC=com</ad:objectReferenceProperty>
+  <da:IdentityManagementOperation s:mustUnderstand="1" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"></da:IdentityManagementOperation>
+  <a:MessageID>urn:uuid:73955a8a-40a4-4cd7-95fb-e85a0ac62ae8</a:MessageID>
+  <a:ReplyTo>
+   <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+  </a:ReplyTo>
+  <a:To s:mustUnderstand="1">net.tcp://20.46.226.100:9389/ActiveDirectoryWebServices/Windows/Resource</a:To>
+ </s:Header>
+ <s:Body>
+  <da:BaseObjectSearchRequest Dialect="http://schemas.microsoft.com/2008/1/ActiveDirectory/Dialect/XPath-Level-1">
+   <da:AttributeType>addata:extendedAttributeInfo</da:AttributeType>
+   <da:AttributeType>addata:attributeTypes</da:AttributeType>
+   <da:AttributeType>ad:distinguishedName</da:AttributeType>
+   <ad:controls>
+    <ad:control type="1.2.840.113556.1.4.319" criticality="true">
+     <ad:controlValue xsi:type="xsd:base64Binary">MIQAAAAFAgECBAA=</ad:controlValue>
+    </ad:control>
+    <ad:control type="1.2.840.113556.1.4.801" criticality="true">
+     <ad:controlValue xsi:type="xsd:base64Binary">MIQAAAADAgEH</ad:controlValue>
+    </ad:control>
+   </ad:controls>
+  </da:BaseObjectSearchRequest>
+ </s:Body>
+</s:Envelope>
