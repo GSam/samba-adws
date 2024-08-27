@@ -182,14 +182,6 @@ class Get(AbstractFetch):
                         "@xmlns:ad": "http://schemas.microsoft.com/2008/1/ActiveDirectory",
                         "@xmlns:da": "http://schemas.microsoft.com/2006/11/IdentityManagement/DirectoryAccess",
                         "da:PartialAttribute": [
-                        #    {
-                        #        "addata:msDS-PortLDAP": [
-                        #            {
-                        #                "@LdapSyntax": "Integer",
-                        #                "ad:value": [{"@xsi:type": "xsd:string", "$": "389"}],
-                        #            }
-                        #        ],
-                        #    }
                         ],
                     }
                 ]
