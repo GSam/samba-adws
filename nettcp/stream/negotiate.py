@@ -56,11 +56,18 @@ class NegotiateStream:
                             ).to_bytes()
             self._inner.write(handshake + data)
         else:
-            while data:
-                # See [MS-NNS] 2.2.2 Data Message v8.0 for length
-                data2 = data[:0xFC30]
-                self._inner.write(struct.pack('<I', len(data2)) + data2)
-                data = data[0xFC30:]
+            # FIXME The chunking only happens at the GSSAPI layer
+            #
+            # This layer should simply send 0xFC00 (63 KiB) + len(header)
+            #
+            # The max specified in [MS-NNS] 2.2.2 Data Message v8.0 says that
+            # this only reacher 0xFC30, but Kerberos seems to be sending
+            # headers of longer length than 0x30!
+            #
+            if data:
+                self._inner.write(struct.pack('<I', len(data)) + data)
+            else:
+                raise Exception("NegotiateStream writing zero bytes!")
 
     def read(self, count=None):
         if not self._handshake_done:
