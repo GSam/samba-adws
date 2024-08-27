@@ -341,6 +341,10 @@ class Create(object):
     def build_response(self):
         try:
             self.execute()
+            msg = self.samdb.search(base=self.dn, scope=ldb.SCOPE_BASE,
+                                    attrs=['objectGUID'])[0]
+            object_guid = str(ndr_unpack(misc.GUID, msg['objectGUID'][0]))
+            self.response['s:Body']['wst:ResourceCreated'][0]['wsa:ReferenceParameters'][0]['ad:objectReferenceProperty'] = [object_guid]
         except ldb.LdbError as e:
             # FIXME Replace with appropriate SOAP fault
             self.response = None
