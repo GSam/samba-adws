@@ -270,6 +270,7 @@ class Create(object):
         self.xml = xml
         self.schema = schema
         self.samdb = samdb
+        self.message_id = self.xml['s:Header']['a:MessageID'][0]
 
         self.response = {
             "@xmlns:s": "http://www.w3.org/2003/05/soap-envelope",
@@ -283,7 +284,7 @@ class Create(object):
                 ],
                 "a:RelatesTo": [
                     {
-                        "$": "urn:uuid:10faa255-55db-43a7-951b-bb1f2d20d3bd",
+                        "$": self.message_id,
                     }
                 ],
                 "a:To": [
@@ -322,6 +323,7 @@ class Create(object):
         add_request = self.xml['s:Body']['da:AddRequest'][0]
 
         for attr in add_request['da:AttributeTypeAndValue']:
+            # FIXME Handle case sensitivity
             if attr['da:AttributeType'] == 'ad:relativeDistinguishedName':
                 self.rdn = attr['da:AttributeValue']['ad:value'][0]['$']
 
