@@ -697,7 +697,7 @@ def convert_response_controls(resp_ctrls):
 
             spl = str(ctrl).rsplit(':', 3)
             if len(spl) == 3:
-                record['cookie'] = spl[-1]
+                record['cookie'] = b64decode(spl[-1])
             else:
                 record['cookie'] = ''
 
