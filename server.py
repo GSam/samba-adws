@@ -347,7 +347,8 @@ class Create(object):
                 self.parent = attr['da:AttributeValue']['ad:value'][0]['$']
             else:
                 name = attr['da:AttributeType'].split(':')[-1]
-                val = [v['$'] for v in attr['da:AttributeValue']['ad:value']]
+                val = [b64decode(v['$']) if v['@xsi:type'] == 'xsd:base64Binary' else v['$']
+                       for v in attr['da:AttributeValue']['ad:value']]
                 self.msg_dict.update({name: val})
 
         self.dn = "{},{}".format(self.rdn, self.parent)
