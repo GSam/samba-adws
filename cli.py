@@ -65,19 +65,35 @@ service_map['Windows/ResourceFactory'] = Service('Windows/ResourceFactory',
                                                  credopts.ipaddress,
                                                  creds)
 
-command = client.Create("CN=testuser,DC=ad,DC=garming,DC=example,DC=com",
+command = client.Create("CN=testuser," + domain_dn,
                         "User",
                         xs, service_map)
 output = command.send()
-
 print(output)
-command = client.Get("CN=testuser,DC=ad,DC=garming,DC=example,DC=com",
+
+command = client.Get("CN=testuser," + domain_dn,
+#command = client.Get(domain_dn,
                      xs, service_map)
 output = command.send()
 
 print(output)
 
-command = client.Delete("CN=testuser,DC=ad,DC=garming,DC=example,DC=com",
+command = client.Get('11111111-1111-1111-1111-111111111111',
+                     xs, service_map)
+output = command.send()
+
+print(output)
+
+service_map['Windows/Enumeration'] = Service('Windows/Enumeration',
+                                             fqdn, host,
+                                             credopts.ipaddress,
+                                             creds)
+command = client.Enumerate(domain_dn,
+                           "(objectClass=user)",
+                           "subtree", xs, service_map)
+output = command.send_all()
+
+command = client.Delete("CN=testuser," + domain_dn,
                         xs, service_map)
 output = command.send()
 
