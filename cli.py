@@ -10,6 +10,7 @@ import xmlschema
 import lxml.etree as ET
 
 from client import Service
+import common
 
 import logging
 
@@ -37,24 +38,7 @@ realm = creds.get_realm()
 
 fqdn = '{}.{}'.format(host, realm) if realm.lower() not in host.lower() else host
 
-xs = xmlschema.XMLSchema('schemas/soap-envelope.xsd', build=False)
-
-_ = xs.add_schema(open('schemas/ws-addr.xsd'))
-_ = xs.add_schema(open('schemas/addressing.xsd'))
-
-_ = xs.add_schema(open('schemas/transfer.xsd'))
-_ = xs.add_schema(open('schemas/enumeration.xsd'))
-
-_ = xs.add_schema(open('schemas/adlq.xsd'))
-_ = xs.add_schema(open('schemas/ad.xsd'))
-_ = xs.add_schema(open('schemas/ad-adhoc.xsd'))
-_ = xs.add_schema(open('schemas/da-controls.xsd'))
-_ = xs.add_schema(open('schemas/addata.xsd'))
-
-_ = xs.add_schema(open('schemas/ad-fault.xsd'))
-_ = xs.add_schema(open('schemas/ad-controls.xsd'))
-
-xs.build()
+xs = common.build_xml_schema()
 
 service = Service('Windows/Resource', fqdn, host, credopts.ipaddress, creds)
 service_map = {}

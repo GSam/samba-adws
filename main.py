@@ -42,29 +42,11 @@ from samba.param import LoadParm
 
 import ldb
 
+import common
 #from adws import sambautils
 #from adws import xmlutils
 
-
-import xmlschema
-xs = xmlschema.XMLSchema('schemas/soap-envelope.xsd', build=False)
-
-_ = xs.add_schema(open('schemas/ws-addr.xsd'))
-_ = xs.add_schema(open('schemas/addressing.xsd'))
-
-_ = xs.add_schema(open('schemas/transfer.xsd'))
-_ = xs.add_schema(open('schemas/enumeration.xsd'))
-
-_ = xs.add_schema(open('schemas/adlq.xsd'))
-_ = xs.add_schema(open('schemas/ad.xsd'))
-_ = xs.add_schema(open('schemas/ad-adhoc.xsd'))
-_ = xs.add_schema(open('schemas/da-controls.xsd'))
-_ = xs.add_schema(open('schemas/addata.xsd'))
-
-_ = xs.add_schema(open('schemas/ad-fault.xsd'))
-_ = xs.add_schema(open('schemas/ad-controls.xsd'))
-
-xs.build()
+xs = common.build_xml_schema()
 
 def print_data(msg, data):
     if log.isEnabledFor(logging.DEBUG):
