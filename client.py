@@ -44,8 +44,8 @@ class Service(object):
 
         while table.tell() < size:
             string = Utf8String.parse(table)
-            assert self.idx not in dictionary_cache
-            self.dictionary_cache[idx] = string.value
+            assert self.idx not in self.dictionary_cache
+            self.dictionary_cache[self.idx] = string.value
             self.idx += 2
 
         if len(self.dictionary_cache) > 0:
