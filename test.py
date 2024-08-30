@@ -20,6 +20,10 @@ _ = xs.add_schema(open('schemas/addata.xsd'))
 _ = xs.add_schema(open('schemas/ad-fault.xsd'))
 _ = xs.add_schema(open('schemas/ad-controls.xsd'))
 
+_ = xs.add_schema(open('schemas/adcap-serialization.xsd'))
+_ = xs.add_schema(open('schemas/adcap-serialization-array.xsd'))
+_ = xs.add_schema(open('schemas/adcap.xsd'))
+
 xs.build()
 
 a= xs.to_dict("traces/02-portldap-get.xml")
