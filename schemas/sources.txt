@@ -42,7 +42,7 @@ ws-addr.xsd:
 transfer.xsd:
   Base: Original standard - Fetched with remote-schemas.py
 
-adcap.xsd:
+adcap.xsd + adcap-serialization.xsd + adcap-serialization-array.xsd:
   Base: MS-ADCAP: Appendix A: Full WSDL
 
 Unimplemented extensions:
