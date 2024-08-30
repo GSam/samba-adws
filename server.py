@@ -600,6 +600,9 @@ class EnumeratePull(AbstractFetch):
             del self.response['s:Body']['wsen:PullResponse'][0]['wsen:EnumerationContext']
 
 
+        if len(objects) == 0:
+            del self.response['s:Body']['wsen:PullResponse'][0]['wsen:Items']['addata:top']
+
         output = self.schema.encode(self.response,
                                     path="s:Envelope",
                                     etree_element_class=ET.Element)
