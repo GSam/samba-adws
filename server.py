@@ -18,7 +18,11 @@ class AbstractFetch(object):
             oid = ROOT_DSE_ATTRS.get(attr)
         else:
             oid = self.samdb.get_syntax_oid_from_lDAPDisplayName(attr)
-        return oid and OID_SCHEMA_SYNTAX_DICT.get(oid) or None
+
+        syntax = OID_SCHEMA_SYNTAX_DICT.get(oid) if oid else None
+        assert syntax, 'syntax not found for attr: %s with oid: %s' % (attr, oid)
+
+        return syntax
 
     def build_attr_list(self, msg, is_root_dse=False, attr_names=[], exclude=[]):
         if not attr_names:
@@ -37,11 +41,8 @@ class AbstractFetch(object):
                 else:
                     syntax = self.get_attr_schema_syntax(
                         attr_name, is_root_dse=is_root_dse)
-                    assert syntax, 'syntax not found for %s' % attr_name
-                    if syntax:
-                        attr_obj = LdapAttr(
-                            attr_name, vals,
-                            syntax.ldap_syntax, syntax.xsi_type)
+                    attr_obj = LdapAttr(attr_name, vals,
+                        syntax.ldap_syntax, syntax.xsi_type)
             else:
                 if attr_name == 'relativeDistinguishedName':
                     attr_obj = SyntheticAttr(attr_name, [get_rdn(msg['dn'])])
