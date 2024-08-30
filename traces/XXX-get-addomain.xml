@@ -1,0 +1,14 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">
+ <s:Header>
+  <a:Action s:mustUnderstand="1">http://schemas.microsoft.com/2008/1/ActiveDirectory/CustomActions/TopologyManagement/GetADDomain</a:Action>
+  <h:Server xmlns:h="http://schemas.microsoft.com/2008/1/ActiveDirectory/CustomActions">ldap:389</h:Server>
+  <a:MessageID>urn:uuid:021d812e-09a0-4bd6-a008-6b0159adf29c</a:MessageID>
+  <a:ReplyTo>
+   <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+  </a:ReplyTo>
+  <a:To s:mustUnderstand="1">net.tcp://20.46.226.100:9389/ActiveDirectoryWebServices/Windows/TopologyManagement</a:To>
+ </s:Header>
+ <s:Body>
+  <GetADDomainRequest xmlns="http://schemas.microsoft.com/2008/1/ActiveDirectory/CustomActions"></GetADDomainRequest>
+ </s:Body>
+</s:Envelope>
