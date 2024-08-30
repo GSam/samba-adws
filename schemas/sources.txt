@@ -42,5 +42,8 @@ ws-addr.xsd:
 transfer.xsd:
   Base: Original standard - Fetched with remote-schemas.py
 
+adcap.xsd:
+  Base: MS-ADCAP: Appendix A: Full WSDL
+
 Unimplemented extensions:
 - MS-ADDM 2.7 Range retrieval

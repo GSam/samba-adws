@@ -1,0 +1,519 @@
+<xs:schema targetNamespace="http://schemas.microsoft.com/2008/1/ActiveDirectory/CustomActions"
+    elementFormDefault="qualified">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:element name="GetADGroupMemberRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GroupDN" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="PartitionDN" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Recursive" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Server" nillable="true" type="xs:string" />
+  <xs:element name="GetADGroupMemberResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Members" nillable="true" type="ca:ArrayOfActiveDirectoryPrincipal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfActiveDirectoryPrincipal">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ActiveDirectoryPrincipal" nillable="true" type="ca:ActiveDirectoryPrincipal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfActiveDirectoryPrincipal" nillable="true" type="ca:ArrayOfActiveDirectoryPrincipal" />
+  <xs:complexType name="ActiveDirectoryPrincipal">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:ActiveDirectoryObject">
+        <xs:sequence>
+          <xs:element name="SID" nillable="true" type="xs:base64Binary" />
+          <xs:element name="SamAccountName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryPrincipal" nillable="true" type="ca:ActiveDirectoryPrincipal" />
+  <xs:complexType name="ActiveDirectoryObject">
+    <xs:sequence>
+      <xs:element name="DistinguishedName" nillable="true" type="xs:string" />
+      <xs:element name="Name" nillable="true" type="xs:string" />
+      <xs:element name="ObjectClass" nillable="true" type="xs:string" />
+      <xs:element name="ObjectGuid" type="ser:guid" />
+      <xs:element name="ObjectTypes" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="ReferenceServer" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryObject" nillable="true" type="ca:ActiveDirectoryObject" />
+  <xs:complexType name="ActiveDirectoryGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:ActiveDirectoryPrincipal">
+        <xs:sequence>
+          <xs:element name="GroupScope" type="ca:ActiveDirectoryGroupScope" />
+          <xs:element name="GroupType" type="ca:ActiveDirectoryGroupType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryGroup" nillable="true" type="ca:ActiveDirectoryGroup" />
+  <xs:simpleType name="ActiveDirectoryGroupScope">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="DomainLocal" />
+      <xs:enumeration value="Global" />
+      <xs:enumeration value="Universal" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ActiveDirectoryGroupScope" nillable="true" type="ca:ActiveDirectoryGroupScope" />
+  <xs:simpleType name="ActiveDirectoryGroupType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Distribution" />
+      <xs:enumeration value="Security" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ActiveDirectoryGroupType" nillable="true" type="ca:ActiveDirectoryGroupType" />
+  <xs:complexType name="ActiveDirectoryPartition">
+    <xs:complexContent mixed="false">
+      <xs:extension  base="ca:ActiveDirectoryObject">
+        <xs:sequence>
+          <xs:element name="DNSRoot" nillable="true" type="xs:string" />
+          <xs:element name="DeletedObjectsContainer" nillable="true" type="xs:string" />
+          <xs:element name="LostAndFoundContainer" nillable="true" type="xs:string" />
+          <xs:element name="QuotasContainer" nillable="true" type="xs:string" />
+          <xs:element name="ReadOnlyReplicaDirectoryServer" nillable="true" type="sera:ArrayOfstring" />
+          <xs:element name="ReplicaDirectoryServer" nillable="true" type="sera:ArrayOfstring" />
+          <xs:element name="SubordinateReferences" nillable="true" type="sera:ArrayOfstring" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryPartition" nillable="true" type="ca:ActiveDirectoryPartition" />
+  <xs:complexType name="ActiveDirectoryDomain">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:ActiveDirectoryPartition">
+        <xs:sequence>
+          <xs:element name="AllowedDNSSuffixes" nillable="true" type="sera:ArrayOfstring" />
+          <xs:element name="AppliedGroupPolicies" nillable="true" type="sera:ArrayOfstring" />
+          <xs:element name="ChildDomains" nillable="true" type="sera:ArrayOfstring" />
+          <xs:element name="ComputersContainer" nillable="true" type="xs:string" />
+          <xs:element name="DomainControllersContainer" nillable="true" type="xs:string" />
+          <xs:element name="DomainMode" type="xs:int" />
+          <xs:element name="DomainSID" nillable="true" type="xs:base64Binary" />
+          <xs:element name="ForeignSecurityPrincipalsContainer" nillable="true" type="xs:string" />
+          <xs:element name="Forest" nillable="true" type="xs:string" />
+          <xs:element name="InfrastructureMaster" nillable="true" type="xs:string" />
+          <xs:element name="LastLogonReplicationInterval" nillable="true" type="ser:duration" />
+          <xs:element name="ManagedBy" nillable="true" type="xs:string" />
+          <xs:element name="NetBIOSName" nillable="true" type="xs:string" />
+          <xs:element name="PDCEmulator" nillable="true" type="xs:string" />
+          <xs:element name="ParentDomain" nillable="true" type="xs:string" />
+          <xs:element name="RIDMaster" nillable="true" type="xs:string" />
+          <xs:element name="SystemsContainer" nillable="true" type="xs:string" />
+          <xs:element name="UsersContainer" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryDomain" nillable="true" type="ca:ActiveDirectoryDomain" />
+  <xs:complexType name="GetADGroupMemberFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetADGroupMemberFault" nillable="true" type="ca:GetADGroupMemberFault" />
+  <xs:complexType name="CustomActionFault">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ArgumentError" nillable="true" type="ca:ArgumentErrorDetailCA" />
+      <xs:element minOccurs="0" name="DirectoryError" nillable="true" type="ca:DirectoryErrorDetailCA" />
+      <xs:element minOccurs="0" name="Error" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ShortError" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomActionFault" nillable="true" type="ca:CustomActionFault" />
+  <xs:complexType name="ArgumentErrorDetailCA">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParameterName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ShortMessage" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="DirectoryErrorDetailCA">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ExtendedErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MatchedDN" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Referral" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element minOccurs="0" name="ShortMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Win32ErrorCode" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="ChangeOptionalFeatureFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ChangeOptionalFeatureFault" nillable="true" type="ca:ChangeOptionalFeatureFault" />
+  <xs:complexType name="GetADForestFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetADForestFault" nillable="true" type="ca:GetADForestFault" />
+  <xs:complexType name="MoveADOperationMasterRoleFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MoveADOperationMasterRoleFault" nillable="true" type="ca:MoveADOperationMasterRoleFault" />
+  <xs:complexType name="GetADPrincipalGroupMembershipFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetADPrincipalGroupMembershipFault" nillable="true" type="ca:GetADPrincipalGroupMembershipFault" />
+  <xs:complexType name="SetPasswordFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SetPasswordFault" nillable="true" type="ca:SetPasswordFault" />
+  <xs:complexType name="ChangePasswordFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ChangePasswordFault" nillable="true" type="ca:ChangePasswordFault" />
+  <xs:complexType name="GetADPrincipalAuthorizationGroupFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetADPrincipalAuthorizationGroupFault" nillable="true" type="ca:GetADPrincipalAuthorizationGroupFault" />
+  <xs:complexType name="GetADDomainFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetADDomainFault" nillable="true" type="ca:GetADDomainFault" />
+  <xs:complexType name="GetADDomainControllerFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetADDomainControllerFault" nillable="true" type="ca:GetADDomainControllerFault" />
+  <xs:complexType name="TranslateNameFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TranslateNameFault" nillable="true" type="ca:TranslateNameFault" />
+  <xs:element name="GetADPrincipalGroupMembershipRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="PartitionDN" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="PrincipalDN" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="ResourceContextPartition" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="ResourceContextServer" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetADPrincipalGroupMembershipResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="MemberOf" nillable="true" type="ca:ArrayOfActiveDirectoryGroup" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfActiveDirectoryGroup">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ActiveDirectoryGroup" nillable="true" type="ca:ActiveDirectoryGroup" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfActiveDirectoryGroup" nillable="true" type="ca:ArrayOfActiveDirectoryGroup" />
+  <xs:element name="SetPasswordRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AccountDN" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="NewPassword" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="PartitionDN" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SetPasswordResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangePasswordRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AccountDN" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="NewPassword" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="OldPassword" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="PartitionDN" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangePasswordResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetADPrincipalAuthorizationGroupRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="PartitionDN" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="PrincipalDN" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetADPrincipalAuthorizationGroupResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="MemberOf" nillable="true" type="ca:ArrayOfActiveDirectoryGroup" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TranslateNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FormatDesired" type="ca:ActiveDirectoryNameFormat" />
+        <xs:element minOccurs="0" name="FormatOffered" type="ca:ActiveDirectoryNameFormat" />
+        <xs:element minOccurs="0" name="Names" nillable="true" type="sera:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="ActiveDirectoryNameFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DistinguishedName">
+        <xs:annotation>
+          <xs:appinfo>
+            <ser:EnumerationValue>1</ser:EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CanonicalName">
+        <xs:annotation>
+          <xs:appinfo>
+            <ser:EnumerationValue>2</ser:EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ActiveDirectoryNameFormat" nillable="true" type="ca:ActiveDirectoryNameFormat" />
+  <xs:element name="TranslateNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="NameTranslateResult" nillable="true" type="ca:ArrayOfActiveDirectoryNameTranslateResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfActiveDirectoryNameTranslateResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ActiveDirectoryNameTranslateResult" nillable="true" type="ca:ActiveDirectoryNameTranslateResult" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfActiveDirectoryNameTranslateResult" nillable="true" type="ca:ArrayOfActiveDirectoryNameTranslateResult" />
+  <xs:complexType name="ActiveDirectoryNameTranslateResult">
+    <xs:sequence>
+      <xs:element name="Name" nillable="true" type="xs:string" />
+      <xs:element name="Result" type="xs:unsignedInt" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryNameTranslateResult" nillable="true" type="ca:ActiveDirectoryNameTranslateResult" />
+  <xs:element name="GetADDomainControllerRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="NtdsSettingsDN" nillable="true" type="sera:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetADDomainControllerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="DomainControllers" nillable="true" type="ca:ArrayOfActiveDirectoryDomainController" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfActiveDirectoryDomainController">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ActiveDirectoryDomainController" nillable="true" type="ca:ActiveDirectoryDomainController" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfActiveDirectoryDomainController" nillable="true" type="ca:ArrayOfActiveDirectoryDomainController" />
+  <xs:complexType name="ActiveDirectoryDomainController">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:ActiveDirectoryDirectoryServer">
+        <xs:sequence>
+          <xs:element name="ComputerDN" nillable="true" type="xs:string" />
+          <xs:element name="Domain" nillable="true" type="xs:string" />
+          <xs:element name="Enabled" type="xs:boolean" />
+          <xs:element name="Forest" nillable="true" type="xs:string" />
+          <xs:element name="IsGlobalCatalog" type="xs:boolean" />
+          <xs:element name="IsReadOnly" type="xs:boolean" />
+          <xs:element name="OSHotFix" nillable="true" type="xs:string" />
+          <xs:element name="OSName" nillable="true" type="xs:string" />
+          <xs:element name="OSServicepack" nillable="true" type="xs:string" />
+          <xs:element name="OSVersion" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryDomainController" nillable="true" type="ca:ActiveDirectoryDomainController" />
+  <xs:complexType name="ActiveDirectoryDirectoryServer">
+    <xs:sequence>
+      <xs:element name="DefaultPartition" nillable="true" type="xs:string" />
+      <xs:element name="HostName" nillable="true" type="xs:string" />
+      <xs:element name="InvocationId" type="ser:guid" />
+      <xs:element name="LdapPort" type="xs:int" />
+      <xs:element name="NTDSSettingsObjectDN" nillable="true" type="xs:string" />
+      <xs:element name="Name" nillable="true" type="xs:string" />
+      <xs:element name="OperationMasterRole" nillable="true" type="ca:ArrayOfActiveDirectoryOperationMasterRole" />
+      <xs:element name="Partitions" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="ServerObjectDN" nillable="true" type="xs:string" />
+      <xs:element name="ServerObjectGuid" type="ser:guid" />
+      <xs:element name="Site" nillable="true" type="xs:string" />
+      <xs:element name="SslPort" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryDirectoryServer" nillable="true" type="ca:ActiveDirectoryDirectoryServer" />
+  <xs:complexType name="ArrayOfActiveDirectoryOperationMasterRole">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ActiveDirectoryOperationMasterRole" type="ca:ActiveDirectoryOperationMasterRole" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfActiveDirectoryOperationMasterRole" nillable="true" type="ca:ArrayOfActiveDirectoryOperationMasterRole" />
+  <xs:simpleType name="ActiveDirectoryOperationMasterRole">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PDCEmulator" />
+      <xs:enumeration value="RIDMaster" />
+      <xs:enumeration value="InfrastructureMaster" />
+      <xs:enumeration value="SchemaMaster" />
+      <xs:enumeration value="DomainNamingMaster" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ActiveDirectoryOperationMasterRole" nillable="true" type="ca:ActiveDirectoryOperationMasterRole" />
+  <xs:element name="GetADDomainRequest">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetADDomainResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Domain" nillable="true" type="ca:ActiveDirectoryDomain" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MoveADOperationMasterRoleRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="OperationMasterRole" type="ca:ActiveDirectoryOperationMasterRole" />
+        <xs:element minOccurs="0" name="Seize" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MoveADOperationMasterRoleResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="WasSeized" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetADForestRequest">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetADForestResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Forest" nillable="true" type="ca:ActiveDirectoryForest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ActiveDirectoryForest">
+    <xs:sequence>
+      <xs:element name="ApplicationPartitions" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="CrossForestReferences" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="DomainNamingMaster" nillable="true" type="xs:string" />
+      <xs:element name="Domains" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="ForestMode" type="xs:int" />
+      <xs:element name="GlobalCatalogs" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="Name" nillable="true" type="xs:string" />
+      <xs:element name="RootDomain" nillable="true" type="xs:string" />
+      <xs:element name="SPNSuffixes" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="SchemaMaster" nillable="true" type="xs:string" />
+      <xs:element name="Sites" nillable="true" type="sera:ArrayOfstring" />
+      <xs:element name="UPNSuffixes" nillable="true" type="sera:ArrayOfstring" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ActiveDirectoryForest" nillable="true" type="ca:ActiveDirectoryForest" />
+  <xs:element name="ChangeOptionalFeatureRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="DistinguishedName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Enable" type="xs:boolean" />
+        <xs:element minOccurs="0" name="FeatureId" type="ser:guid" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangeOptionalFeatureResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetVersionRequest">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetVersionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="VersionMajor" type="xs:int" />
+        <xs:element minOccurs="0" name="VersionMinor" type="xs:int" />
+        <xs:element minOccurs="0" name="VersionString" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="GetVersionFault">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ca:CustomActionFault">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GetVersionFault" nillable="true" type="ca:GetVersionFault" />
+</xs:schema>
