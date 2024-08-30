@@ -18,6 +18,10 @@ def build_xml_schema():
     _ = xs.add_schema(open('schemas/ad-fault.xsd'))
     _ = xs.add_schema(open('schemas/ad-controls.xsd'))
 
+    _ = xs.add_schema(open('schemas/adcap-serialization.xsd'))
+    _ = xs.add_schema(open('schemas/adcap-serialization-array.xsd'))
+    _ = xs.add_schema(open('schemas/adcap.xsd'))
+
     xs.build()
 
     return xs
