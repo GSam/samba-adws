@@ -2,6 +2,9 @@
 
 ## Installation
 
+To avoid installing packages as root and polluting namespaces, we can use a
+virtualenv.
+
 ```bash
 git clone https://github.com/GSam/samba-adws.git
 git clone https://github.com/GSam/python-wcfbin.git
@@ -15,6 +18,8 @@ found at `https://github.com/GSam/samba`. The **PYTHONPATH** environment
 variable needs to refer to the patched Python modules.
 
 ## Running
+
+Requires sudo / root in order to access sam.ldb directly.
 
 ### Expose on network interface 10.0.0.1:9389
 
