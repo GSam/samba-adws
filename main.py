@@ -86,8 +86,10 @@ class ADWSServer(SocketServer.BaseRequestHandler):
                 if not negotiated:
                     log.info('negotiate started')
                     self.stream = GENSECStream(self.stream)
-                    self.stream.negotiate_server()
-                    negotiated = True
+                    negotiated = self.stream.negotiate_server()
+
+                    if not negotiated:
+                        return
 
                     lp = LoadParm()
                     lp.load_default()

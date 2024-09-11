@@ -54,7 +54,7 @@ class GENSECStream:
                 server_finished, server_to_client = self.client_ctx.update(token)
             except NTSTATUSError as e:
                 self._inner.write_error(e)
-                break
+                return False
 
             if server_finished:
                 self._inner.write_handshake_done(server_to_client)
@@ -62,6 +62,8 @@ class GENSECStream:
                 self._inner.write(server_to_client)
 
                 token = self._inner.read()
+
+        return True
 
     def negotiate(self):
         self.client_ctx = gensec.Security.start_client(settings=self.settings)
