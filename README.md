@@ -11,7 +11,7 @@ virtualenv env
 ```
 
 Currently this repository requires a patched Samba installation. Patches can be
-found at `https://github.com/GSam/samba`. The PYTHONPATH needs to refer to the
+found at `https://github.com/GSam/samba`. The *PYTHONPATH* needs to refer to the
 patched Python modules.
 
 ## Running
