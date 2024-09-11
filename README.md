@@ -28,20 +28,35 @@ cd samba-adws
 PYTHONPATH=/path/to/samba/bin/python:/path/to/python-wcfbin sudo --preserve-env=PYTHONPATH ../env/bin/python main.py --bind 10.0.0.1
 ```
 
-## Protocol stack
+## Technical Details
+
+### Protocol Stack
+
+The following are implemented using the nettcp module (originally from ernw/net.tcp-proxy).
 
 - TCP
 - MC-NMFTB (MC-NMF TCP binding protocol)
 - MC-NMF (.NET framing protocol)
 - MS-NNS (.NET NegotiateStream protocol)
 
+In the nettcp module is a custom Samba gensec handler.
+
 - [GSSAPI wrapping]
+
+The following are implemented in python-wcfbin (originally ernw/python-wcfbin).
 
 - MC-NBFX (.NET binary format)
 - MC-NBFS (.NET binary format for SOAP)
+
+The extended dictionary handling is done by custom code for samba-adws.
+
 - MC-NBFSE (.NET binary format extension for MC-NBFS for dictionary compression)
 
-- [SOAP unwrapping]
+Standard SOAP is handled by either lxml or xmlschema.
+
+- [SOAP wrapping]
+
+Custom code in samba-adws handles the requests and responses.
 
 - XML / SOAP (overview in MS-ADDM) belonging to one of the following:
    - MS-WSDS (Directory extensions to WS-Enumeration)
