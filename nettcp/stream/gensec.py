@@ -4,12 +4,11 @@
 from __future__ import print_function, unicode_literals, absolute_import
 
 import logging
-import gssapi
 from .negotiate import NegotiateStream
 
 from samba.param import LoadParm
 from samba.credentials import Credentials
-from samba import gensec, auth
+from samba import gensec, auth, NTSTATUSError
 
 log = logging.getLogger(__name__ + '.GENSECStream')
 
